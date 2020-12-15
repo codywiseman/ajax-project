@@ -1,0 +1,20 @@
+
+header {
+  background-color: black;
+  justify-content: space-between;
+  align-items: center;
+}
+
+h1 {
+  font-family: 'Open Sans', sans-serif;
+  color: white;
+  margin-right: 2rem;
+}
+
+.logo {
+  width: 8rem;
+}
+
+.logo img {
+  width: 100%;
+}

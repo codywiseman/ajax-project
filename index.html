@@ -4,15 +4,32 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AJAX Project</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@1,600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/reset.css">
   <link rel="stylesheet" href="css/layout.css">
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-  <header>
+  <header class="row">
+    <div class="logo">
+      <img src="Images/NHLlogo.png" alt="NHL Logo">
+    </div>
+    <div>
+      <h1>Chipped Ice</h1>
+    <div>
   </header>
-  <main>
-  </main>
+  <div class="container">
+    <main>
+      <div class="flex-column" data-view="home-page">
+        <select name="team-select" id="team-select">
+          <option value="select-team" selected disabled>select a team</option>
+        </select>
+
+      </div>
+    </main>
+  </div>
   <script src="js/data.js"></script>
   <script src="js/main.js"></script>
 </body>
