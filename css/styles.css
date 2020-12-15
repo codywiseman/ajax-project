@@ -1,4 +1,6 @@
 
+/*     Header      */
+
 header {
   background-color: black;
   justify-content: space-between;
@@ -17,4 +19,17 @@ h1 {
 
 .logo img {
   width: 100%;
+}
+
+
+/*    Search Row     */
+
+.search-row {
+  height: 8rem;
+  margin-top: 1.5rem;
+}
+
+select, input {
+  height: 2.5rem;
+  font-size: 1.3rem;
 }
