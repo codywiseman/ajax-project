@@ -25,11 +25,42 @@ h1 {
 
 /*    Search Row     */
 
-.search-row,
-.team-row-1 {
-  height: 8rem;
-  margin-top: 1.5rem;
+.flex-column {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
 }
+
+.space-between {
+  justify-content: center;
+}
+
+.row-height {
+  height: 8rem;
+  margin: 2rem 0 ;
+}
+
+.or {
+  text-align: center;
+  margin: 0;
+}
+
+.browse {
+  height: 2rem;
+  width: 75%;
+  margin-right: 1rem
+}
+
+.submit-button {
+  background-color: black;
+  color: white;
+  width: 22%;
+  font-weight: 500;
+
+}
+
+
+/*      Team Info      */
 
 .team-row-1 {
   align-items: center;
@@ -42,13 +73,4 @@ h1 {
 .team-info p {
   font-size: 0.9rem;
   margin: 0.2rem 0 0.2rem 1rem;
-}
-
-.search-button {
-  justify-content: flex-end;
-}
-
-.browse {
-  height: 2.5rem;
-  font-size: 1.3rem;
 }

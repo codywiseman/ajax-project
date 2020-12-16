@@ -22,18 +22,22 @@
   </header>
   <div class="container">
     <main>
-      <div class="view hidden" data-view="home-page">
-        <form class="flex-column search-row">
-          <select name="team-select" id="team-select" class="browse">
-            <option value="select-team" selected disabled>Select Team</option>
-          </select>
-          <input type="search" class="browse" placeholder="Search for a Player">
-        </form>
-        <div class="row search-button">
-          <input type="submit" value='Search'>
+      <div class="view" data-view="home-page">
+        <div class="flex-column row-height">
+          <form class="row space-between">
+            <select name="team-select"  class="browse" id="team-select" >
+              <option value="select-team" selected disabled>Select Team</option>
+            </select>
+            <input type="submit" value='ENTER' class="submit-button">
+          </form>
+          <p class="or">OR</p>
+          <form class="row space-between">
+            <input type="search" class="browse" placeholder="Search for a Player">
+            <input type="submit" value='SEARCH' class="submit-button">
+          </form>
         </div>
       </div>
-      <div class="view" data-view="team-page">
+      <div class="view hidden" data-view="team-page">
         <div class="row team-row-1">
           <img src="images/default-placeholder-image.png" class="place-holder" alt="">
           <div class="team-info">
