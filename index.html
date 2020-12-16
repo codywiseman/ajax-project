@@ -17,16 +17,33 @@
       <img src="Images/NHLlogo.png" alt="NHL Logo">
     </div>
     <div>
-      <h1>chipped ice</h1>
+      <h1>CHIPPED ICE</h1>
     <div>
   </header>
   <div class="container">
     <main>
-      <div class="flex-column search-row" data-view="home-page">
-        <select name="team-select" id="team-select">
-          <option value="select-team" selected disabled>select a team</option>
-        </select>
-        <input type="search" placeholder="search for player">
+      <div class="view hidden" data-view="home-page">
+        <form class="flex-column search-row">
+          <select name="team-select" id="team-select" class="browse">
+            <option value="select-team" selected disabled>Select Team</option>
+          </select>
+          <input type="search" class="browse" placeholder="Search for a Player">
+        </form>
+        <div class="row search-button">
+          <input type="submit" value='Search'>
+        </div>
+      </div>
+      <div class="view" data-view="team-page">
+        <div class="row team-row-1">
+          <img src="images/default-placeholder-image.png" class="place-holder" alt="">
+          <div class="team-info">
+            <p><span class="bold">Team Name:</span> New Jersey Devils</p>
+            <p><span class="bold">Abbreviation:</span> NJD</p>
+            <p><span class="bold">Inaugural Season:</span> 1982</p>
+            <p><span class="bold">Conference:</span> Eastern</p>
+            <p><span class="bold">Division:</span> Metropolitan</p>
+          </div>
+        </div>
       </div>
     </main>
   </div>
