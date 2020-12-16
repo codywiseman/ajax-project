@@ -2,6 +2,7 @@ var $teamSelect = document.querySelector('#team-select');
 var $viewClasses = document.querySelectorAll('.view');
 var $teamForm = document.querySelector('.team-form')
 var $teamPageDiv = document.querySelector('div[data-view="team-page');
+var $teamSelectOptions = document.getElementsByClassName('team');
 
 
 
@@ -19,6 +20,7 @@ teamsXhr.addEventListener('load', function() {
     var team = teamsList[i];
     var teamOption = document.createElement('option');
     teamOption.value = teamsList[i].teamName;
+    teamOption.className = 'team';
     teamOption.textContent = teamsList[i].name;
     $teamSelect.appendChild(teamOption);
   }
@@ -26,14 +28,57 @@ teamsXhr.addEventListener('load', function() {
 teamsXhr.send();
 
 
+/*     Select input     */
+
+$teamSelect.addEventListener('change', function() {
+
+})
 
 
 /*      Submit Listeners      */
 
+$teamForm.addEventListener('submit', function(e){
+  e.preventDefault();
+  console.log(e.target.tagName)
+})
 
 
 
 /*     Render Team Page     */
+
+var teamLogoImages = {
+  'New Jersey Devils': 'images/devils.png',
+  'New York Islanders': 'images/islanders.png',
+  'New York Rangers': 'images/rangers.png',
+  'Philadelphia Flyers': 'images/flyers.png',
+  'Pittsburgh Penguins': 'images/penguins.png',
+  'Boston Bruins': 'images/bostonbruins.png',
+  'Buffalo Sabres': 'images/sabres.png',
+  'Montréal Canadiens': 'images/canadiens.png',
+  'Ottawa Senators': 'images/senators.png',
+  'Toronto Maple Leafs': 'images/mapleleafs.png',
+  'Carolina Hurricanes':'images/canes.png',
+  'Florida Panthers': 'images/panthers.png',
+  'Tampa Bay Lightning': 'images/lightning.png',
+  'Washington Capitals': 'images/capitals.png',
+  'Chicago Blackhawks': 'images/blackhawks.png',
+  'Detroit Red Wings': 'images/redwings.png',
+  'Nashville Predators': 'images/predators.png',
+  'St. Louis Blues': 'images/blues.png',
+  'Calgary Flames': 'images/flames.png',
+  'Colorado Avalanche': 'images/avalanche.png',
+  'Edmonton Oilers': 'images/oilers.png',
+  'Vancouver Canucks': 'images/canucks.png',
+  'Anaheim Ducks': 'images/ducks.png',
+  'Dallas Stars': 'images/stars.png',
+  'Los Angeles Kings': 'images/kings.png',
+  'San Jose Sharks': 'images/sharks.png',
+  'Columbus Blue Jackets': 'images/jackets.png',
+  'Minnesota Wild': 'images/wilds.png',
+  'Winnipeg Jets': 'images/jets.png',
+  'Arizona Coyotes': 'images/coyotes.png',
+  'Vegas Golden Knights': 'images/knights.png'
+}
 
 function renderTeamPage(team) {
   for (var i = 0; i < teamsList.length; i++) {
@@ -42,7 +87,7 @@ function renderTeamPage(team) {
       divOne.setAttribute('class', 'row team-row-1');
 
       var teamLogo = document.createElement('img');
-      teamLogo.setAttribute('src', '')
+      teamLogo.setAttribute('src', teamLogoImages[team])
       teamLogo.setAttribute('class', 'logo')
 
       var divTwo = document.createElement('div');
@@ -94,8 +139,6 @@ function renderTeamPage(team) {
     }
   }
 }
-
-
 
 
 
