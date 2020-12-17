@@ -3,7 +3,8 @@ var $viewClasses = document.querySelectorAll('.view');
 var $teamForm = document.querySelector('.team-form')
 var $teamPageDiv = document.querySelector('div[data-view="team-page');
 var $teamSelectOptions = document.getElementsByClassName('team');
-var $homeLogo = document.querySelector('.logo')
+var $homeLogo = document.querySelector('.logo');
+var $rosterTable = document.querySelector('.roster-table');
 
 
 /*      Teams Request     */
@@ -11,10 +12,9 @@ var $homeLogo = document.querySelector('.logo')
 var teamsList;
 
 var teamsXhr = new XMLHttpRequest();
-teamsXhr.open('GET', 'https://statsapi.web.nhl.com/api/v1/teams');
+teamsXhr.open('GET', 'https://statsapi.web.nhl.com/api/v1/teams?expand=team.roster');
 teamsXhr.responseType = 'json';
 teamsXhr.addEventListener('load', function() {
-  console.log(teamsXhr.response.teams)
   teamsList = teamsXhr.response.teams;
   for (var i = 0; i < teamsList.length; i++) {
     var team = teamsList[i];
@@ -34,7 +34,6 @@ $homeLogo.addEventListener('click', function(){
   dataview('home-page');
 })
 
-
 /*      Submit Listeners      */
 
 $teamForm.addEventListener('submit', function(e){
@@ -42,12 +41,11 @@ $teamForm.addEventListener('submit', function(e){
   if ($teamSelect.selectedIndex !== 0) {
     $teamPageDiv.innerHTML ='';
     renderTeamPage($teamSelectOptions[($teamSelect.selectedIndex - 1)].textContent);
+    renderRoster($teamSelectOptions[($teamSelect.selectedIndex - 1)].textContent);
     dataview('team-page');
     $teamForm.reset();
   }
 })
-
-
 
 /*     Render Team Page     */
 
@@ -145,7 +143,49 @@ function renderTeamPage(team) {
   }
 }
 
+/*<tbody>
+  <tr>
+    <td>4</td>
+    <td>Cam Fowler</td>
+    <td>D</td>
+  </tr>
+  <tr>
+    <td>15</td>
+    <td>Ryan Getzlaf</td>
+    <td>C</td>
+  </tr>
+</tbody> */
 
+function renderRoster(team) {
+  for(var i = 0; i < teamsList.length; i++) {
+    if(teamsList[i].name === team) {
+      var teamRoster = [];
+      for (var x = 0; x < teamsList[i].roster.roster.length; x++) {
+        teamRoster.push(teamsList[i].roster.roster[x])
+      }
+      for(var rosterSpot = 0; rosterSpot < teamRoster.length; rosterSpot++) {
+        var tableBody = document.createElement('tbody');
+
+        var tableRow = document.createElement('tr')
+
+        var tDataOne = document.createElement('td');
+        tDataOne.textContent = teamRoster[rosterSpot].jerseyNumber;
+
+        var tDataTwo = document.createElement('td');
+        tDataTwo.textContent = teamRoster[rosterSpot].person.fullName;
+
+        var tDataThree = document.createElement('td');
+        tDataThree.textContent = teamRoster[rosterSpot].position.Name;
+
+        tableRow.appendChild(tDataOne);
+        tableRow.appendChild(tDataTwo);
+        tableRow.appendChild(tDataThree);
+        tableBody.appendChild(tableRow);
+        $rosterTable.appendChild(tableBody);
+      }
+    }
+  }
+}
 
  /*    View Swapping      */
 

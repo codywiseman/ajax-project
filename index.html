@@ -22,7 +22,7 @@
   </header>
   <div class="container">
     <main>
-      <div class="view" data-view="home-page">
+      <div class="view hidden" data-view="home-page">
         <div class="flex-column row-height">
           <form class="row space-between team-form">
             <select name="team-select"  class="browse" id="team-select">
@@ -37,7 +37,40 @@
           </form>
         </div>
       </div>
-      <div class="view hidden" data-view="team-page"></div>
+      <div class="view" data-view="team-page">
+        <div class="row team-row-1">
+          <img src="images/default-placeholder-image.png" class="logo" alt="">
+          <div class="team-info">
+            <p><span class="bold">Team Name:</span> New Jersey Devils</p>
+            <p><span class="bold">Abbreviation:</span> NJD</p>
+            <p><span class="bold">Inaugural Season:</span> 1982</p>
+            <p><span class="bold">Conference:</span> Eastern</p>
+            <p><span class="bold">Division:</span> Metropolitan</p>
+          </div>
+        </div>
+        <h3>Roster<h3>
+        <table class="roster-table">
+          <thead>
+            <tr>
+              <th class="table-num">No.</th>
+              <th class="table-player">Player</th>
+              <th class="table-position">Position</th>
+            <tr></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>4</td>
+              <td>Cam Fowler</td>
+              <td>D</td>
+            </tr>
+            <tr>
+              <td>15</td>
+              <td>Ryan Getzlaf</td>
+              <td>C</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </main>
   </div>
   <script src="js/data.js"></script>
