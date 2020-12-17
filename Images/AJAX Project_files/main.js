@@ -39,12 +39,11 @@ $homeLogo.addEventListener('click', function(){
 
 $teamForm.addEventListener('submit', function(e){
   e.preventDefault();
-  if ($teamSelect.selectedIndex !== 0) {
+  if ($teamSelect.selectedIndex !== 0);
     $teamPageDiv.innerHTML ='';
     renderTeamPage($teamSelectOptions[($teamSelect.selectedIndex - 1)].textContent);
     dataview('team-page');
     $teamForm.reset();
-  }
 })
 
 

@@ -36,7 +36,7 @@ h1 {
 
 .row-height {
   height: 8rem;
-  margin: 2rem 0;
+  margin: 2rem 0 ;
 }
 
 .or {
@@ -47,7 +47,7 @@ h1 {
 .browse {
   height: 2rem;
   width: 75%;
-  margin-right: 1rem;
+  margin-right: 1rem
 }
 
 .submit-button {
@@ -55,6 +55,7 @@ h1 {
   color: white;
   width: 22%;
   font-weight: 500;
+
 }
 
 
@@ -62,8 +63,6 @@ h1 {
 
 .team-row-1 {
   align-items: center;
-  justify-content: space-around;
-  margin-top: 2rem;
 }
 
 .bold {
@@ -73,8 +72,4 @@ h1 {
 .team-info p {
   font-size: 0.9rem;
   margin: 0.2rem 0 0.2rem 1rem;
-}
-
-.hidden {
-  display: none;
 }
