@@ -4,7 +4,6 @@ var $teamForm = document.querySelector('.team-form')
 var $teamPageDiv = document.querySelector('div[data-view="team-page');
 var $teamSelectOptions = document.getElementsByClassName('team');
 var $homeLogo = document.querySelector('.logo');
-var $rosterTable = document.querySelector('.roster-table');
 
 
 /*      Teams Request     */
@@ -143,18 +142,17 @@ function renderTeamPage(team) {
   }
 }
 
-/*<tbody>
-  <tr>
-    <td>4</td>
-    <td>Cam Fowler</td>
-    <td>D</td>
-  </tr>
-  <tr>
-    <td>15</td>
-    <td>Ryan Getzlaf</td>
-    <td>C</td>
-  </tr>
-</tbody> */
+
+/*<h3>Roster<h3>
+  <table class="roster-table">
+    <thead>
+      <tr>
+        <th class="table-num">No.</th>
+        <th>Player</th>
+        <th class="table-position">Position</th>
+      </tr>
+    </thead>
+  </table> */
 
 function renderRoster(team) {
   for(var i = 0; i < teamsList.length; i++) {
@@ -163,6 +161,34 @@ function renderRoster(team) {
       for (var x = 0; x < teamsList[i].roster.roster.length; x++) {
         teamRoster.push(teamsList[i].roster.roster[x])
       }
+      var tableLabel = document.createElement('h3');
+      tableLabel.textContent = 'Roster'
+
+      var table = document.createElement('table')
+      table.setAttribute('class', 'roster-table');
+
+      var tableHead = document.createElement('thead');
+
+      var headRow = document.createElement('trow');
+
+      var tHeadOne = document.createElement('th');
+      tHeadOne.setAttribute('class', 'col-width');
+      tHeadOne.textContent = 'No.'
+
+      var tHeadTwo = document.createElement('th');
+      tHeadTwo.textContent = 'Player'
+
+      var tHeadThree = document.createElement('th');
+      tHeadThree.setAttribute('class', 'col-width');
+      tHeadThree.textContent = 'Position'
+
+      headRow.appendChild(tHeadOne);
+      headRow.appendChild(tHeadTwo);
+      headRow.appendChild(tHeadThree);
+      tableHead.appendChild(headRow);
+      table.appendChild(tableHead);
+      $teamPageDiv.appendChild(tableLabel);
+
       for(var rosterSpot = 0; rosterSpot < teamRoster.length; rosterSpot++) {
         var tableBody = document.createElement('tbody');
 
@@ -175,13 +201,14 @@ function renderRoster(team) {
         tDataTwo.textContent = teamRoster[rosterSpot].person.fullName;
 
         var tDataThree = document.createElement('td');
-        tDataThree.textContent = teamRoster[rosterSpot].position.Name;
+        tDataThree.textContent = teamRoster[rosterSpot].position.name;
 
         tableRow.appendChild(tDataOne);
         tableRow.appendChild(tDataTwo);
         tableRow.appendChild(tDataThree);
         tableBody.appendChild(tableRow);
-        $rosterTable.appendChild(tableBody);
+        table.appendChild(tableBody);
+        $teamPageDiv.appendChild(table);
       }
     }
   }
