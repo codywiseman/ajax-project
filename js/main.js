@@ -169,18 +169,19 @@ function renderRoster(team) {
 
       var tableHead = document.createElement('thead');
 
-      var headRow = document.createElement('trow');
+      var headRow = document.createElement('tr');
 
       var tHeadOne = document.createElement('th');
-      tHeadOne.setAttribute('class', 'col-width');
+      tHeadOne.setAttribute('class', 'col-one');
       tHeadOne.textContent = 'No.'
 
       var tHeadTwo = document.createElement('th');
       tHeadTwo.textContent = 'Player'
 
       var tHeadThree = document.createElement('th');
-      tHeadThree.setAttribute('class', 'col-width');
       tHeadThree.textContent = 'Position'
+
+      var tableBody = document.createElement('tbody');
 
       headRow.appendChild(tHeadOne);
       headRow.appendChild(tHeadTwo);
@@ -190,8 +191,6 @@ function renderRoster(team) {
       $teamPageDiv.appendChild(tableLabel);
 
       for(var rosterSpot = 0; rosterSpot < teamRoster.length; rosterSpot++) {
-        var tableBody = document.createElement('tbody');
-
         var tableRow = document.createElement('tr')
 
         var tDataOne = document.createElement('td');

@@ -77,28 +77,26 @@ h1 {
 
 h3 {
   text-align: center;
+  margin: 0.4rem 0;
 }
 
 .roster-table {
   width: 100%;
   border-collapse: collapse;
-  margin: auto;
-}
-
-th, td {
-  font-size: 1rem;
-}
-
-.col-width {
-width: 17%;
-}
-
-td {
-  font-weight: normal;
+  margin: 0.5rem auto;
 }
 
 tbody tr:nth-child(odd) {
   background-color: #eeeeee;
+}
+
+tr {
+  text-align: left;
+}
+
+tr :nth-child(1) {
+  text-align: center;
+  width: 20%;
 }
 
 .hidden {
