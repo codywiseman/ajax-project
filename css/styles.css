@@ -75,6 +75,30 @@ h1 {
   margin: 0.2rem 0 0.2rem 1rem;
 }
 
+h3 {
+  text-align: center;
+  margin: 0.4rem 0;
+}
+
+.roster-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0.5rem auto;
+}
+
+tbody tr:nth-child(odd) {
+  background-color: #eeeeee;
+}
+
+tr {
+  text-align: left;
+}
+
+tr :nth-child(1) {
+  text-align: center;
+  width: 20%;
+}
+
 .hidden {
   display: none;
 }
