@@ -108,6 +108,10 @@ $playerSearch.addEventListener('keyup', function(){
   }
 })
 
+$suggestion.addEventListener('click', function(e) {
+  $playerSearch.value = e.target.innerHTML;
+  $suggestion.innerHTML = '';
+})
 /*     Render Team Page     */
 
 var teamLogoImages = {

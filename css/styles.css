@@ -100,8 +100,8 @@ tr :nth-child(1) {
   width: 20%;
 }
 
-.hidden {
-  display: none;
+.justify-left {
+  justify-content: left;
 }
 
 .suggestions div {
@@ -110,4 +110,8 @@ tr :nth-child(1) {
 
 .suggestions div:hover {
   background-color: #999;
+}
+
+.hidden {
+  display: none;
 }
