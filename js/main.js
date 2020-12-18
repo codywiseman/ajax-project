@@ -261,13 +261,29 @@ function renderPlayerPage(person) {
 
   var pTwo = document.createElement('p')
   var spanTwo = document.createElement('span')
+  pTwo.setAttribute('class', 'player-info');
+  pTwo.textContent = person.birthDate
+  spanTwo.setAttribute('class', 'bold');
+  spanTwo.textContent = 'Birthdate: '
+  pTwo.prepend(spanTwo);
 
   var pThree = document.createElement('p')
   var spanThree = document.createElement('span')
+  pThree.setAttribute('class', 'player-info');
+  pThree.textContent = person.shootsCatches;
+  spanThree.setAttribute('class', 'bold');
+  if(person.primaryPosition.code === 'G') {
+    spanThree.textContent = 'Catches: '
+  } else {
+    spanThree.textContent = 'Shoots: '
+  }
+  pThree.prepend(spanThree);
 
   $playerPageDiv.appendChild(nameHeading);
   $playerPageDiv.appendChild(infoHeading);
   $playerPageDiv.appendChild(pOne);
+  $playerPageDiv.appendChild(pTwo);
+  $playerPageDiv.appendChild(pThree);
 }
 
  /*    View Swapping      */
