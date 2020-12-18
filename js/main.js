@@ -47,6 +47,9 @@ teamsXhr.send();
 /*      Go to Home Page     */
 
 $homeLogo.addEventListener('click', function(){
+  $teamForm.reset();
+  $playerForm.reset();
+  $suggestion.innerHTML = '';
   dataview('home-page');
 })
 
@@ -75,7 +78,6 @@ $playerForm.addEventListener('submit', function(e){
       playerXhr.responseType = 'json';
       playerXhr.addEventListener('load', function (){
         var player = playerXhr.response.people[0];
-        console.log(player)
         $playerPageDiv.innerHTML = '';
         renderPlayerPage(player);
         dataview('player-page');
@@ -85,6 +87,9 @@ $playerForm.addEventListener('submit', function(e){
   }
   playerXhr.send();
 })
+
+
+/*       Player seach bar suggestions        */
 
 $playerSearch.addEventListener('keyup', function(){
   var input = $playerSearch.value;
@@ -112,6 +117,30 @@ $suggestion.addEventListener('click', function(e) {
   $playerSearch.value = e.target.innerHTML;
   $suggestion.innerHTML = '';
 })
+
+/*      Click on player on roster to be take to player page       */
+
+document.addEventListener('click', function (e) {
+  if (data.view === 'team-page' && e.target.tagName === 'TD') {
+    var toPlayerPage = e.target.closest('.player-row').innerHTML.toLowerCase();
+    var playerXhr = new XMLHttpRequest();
+    for (var i = 0; i < playerIds.length; i++) {
+      if (playerIds[i].hasOwnProperty(toPlayerPage)) {
+        playerXhr.open('GET', 'https://statsapi.web.nhl.com/api/v1/people/' + (playerIds[i][toPlayerPage]).toString());
+        playerXhr.responseType = 'json';
+        playerXhr.addEventListener('load', function () {
+          var player = playerXhr.response.people[0];
+          $playerPageDiv.innerHTML = '';
+          renderPlayerPage(player);
+          dataview('player-page');
+        })
+      }
+    }
+    playerXhr.send();
+  }
+})
+
+
 /*     Render Team Page     */
 
 var teamLogoImages = {
@@ -236,6 +265,7 @@ function renderRoster(team) {
       tHeadThree.textContent = 'Position'
 
       var tableBody = document.createElement('tbody');
+      tableBody.setAttribute('id', 'rosterBody')
 
       headRow.appendChild(tHeadOne);
       headRow.appendChild(tHeadTwo);
@@ -245,12 +275,13 @@ function renderRoster(team) {
       $teamPageDiv.appendChild(tableLabel);
 
       for(var rosterSpot = 0; rosterSpot < teamRoster.length; rosterSpot++) {
-        var tableRow = document.createElement('tr')
+        var tableRow = document.createElement('tr');
 
         var tDataOne = document.createElement('td');
         tDataOne.textContent = teamRoster[rosterSpot].jerseyNumber;
 
         var tDataTwo = document.createElement('td');
+        tDataTwo.setAttribute('class', 'player-row')
         tDataTwo.textContent = teamRoster[rosterSpot].person.fullName;
 
         var tDataThree = document.createElement('td');

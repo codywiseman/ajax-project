@@ -15,6 +15,7 @@ h1 {
 
 .logo {
   width: 8rem;
+  cursor: pointer;
 }
 
 .logo img {
@@ -55,6 +56,7 @@ h1 {
   color: white;
   width: 22%;
   font-weight: 500;
+  cursor: pointer;
 }
 
 
@@ -93,6 +95,7 @@ tbody tr:nth-child(odd) {
 
 tr {
   text-align: left;
+  cursor: pointer;
 }
 
 tr :nth-child(1) {
@@ -105,11 +108,18 @@ tr :nth-child(1) {
 }
 
 .suggestions div {
-  padding: 0.1rem 0.2rem;
+  padding: 0.3rem 1rem;
+  background-color: #eeeeee;
+  border-top: 1px solid #ffffff;
+  border-radius: 0.2rem;
 }
 
 .suggestions div:hover {
-  background-color: #999;
+  background-color: #ffffff;
+}
+
+.player-row:hover {
+  color: blue;
 }
 
 .hidden {
