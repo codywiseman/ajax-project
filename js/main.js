@@ -4,11 +4,16 @@ var $teamForm = document.querySelector('.team-form')
 var $teamPageDiv = document.querySelector('div[data-view="team-page');
 var $teamSelectOptions = document.getElementsByClassName('team');
 var $homeLogo = document.querySelector('.logo');
+var $playerPageDiv = document.querySelector('div[data-view="player-page');
+var $playerForm = document.querySelector('.player-form')
+var $playerSearch = document.querySelector('.player-search')
 
 
 /*      Teams Request     */
 
 var teamsList;
+
+var playerIds = [];
 
 var teamsXhr = new XMLHttpRequest();
 teamsXhr.open('GET', 'https://statsapi.web.nhl.com/api/v1/teams?expand=team.roster');
@@ -23,9 +28,15 @@ teamsXhr.addEventListener('load', function() {
     teamOption.textContent = teamsList[i].name;
     $teamSelect.appendChild(teamOption);
   }
+  for (var z = 0; z < teamsList.length; z++) {
+    for (var x = 0; x < teamsList[z].roster.roster.length; x++) {
+      var obj = {};
+      obj[(teamsList[z].roster.roster[x].person.fullName).toLowerCase()] = teamsList[z].roster.roster[x].person.id;
+      playerIds.push(obj);
+    }
+  }
 })
 teamsXhr.send();
-
 
 /*      Go to Home Page     */
 
@@ -45,6 +56,28 @@ $teamForm.addEventListener('submit', function(e){
     $teamForm.reset();
   }
 })
+
+$playerForm.addEventListener('submit', function(e){
+  e.preventDefault();
+  var playerXhr = new XMLHttpRequest();
+  var id = $playerSearch.value.toLowerCase();
+  for(var i = 0; i < playerIds.length; i++) {
+    if(playerIds[i].hasOwnProperty(id)) {
+      playerXhr.open('GET', 'https://statsapi.web.nhl.com/api/v1/people/' + (playerIds[i][id]).toString());
+      playerXhr.responseType = 'json';
+      playerXhr.addEventListener('load', function (){
+        var player = playerXhr.response.people[0];
+        console.log(player)
+        $playerPageDiv.innerHTML = '';
+        renderPlayerPage(player);
+        dataview('player-page');
+        $playerForm.reset(player);
+      })
+    }
+  }
+  playerXhr.send();
+})
+
 
 /*     Render Team Page     */
 
@@ -199,6 +232,42 @@ function renderRoster(team) {
       }
     }
   }
+}
+
+/*<h2 class="player-name">Ryan Getzlaf | #15</h2>
+  <h4 class="player-info">C &vert; 6'3" &vert; 228lb &vert; Age: 35 &vert; Anaheim Ducks</h4>
+  <p class="player-info"><span class="bold">Born:</span> 1995-04-22</p>
+  <p class="player-info"><span class="bold">Birthplace: </span> Seskatchewan</p>
+  <p class="player-info"><span class="bold">Shoots: </span>R</p> */
+
+function renderPlayerPage(person) {
+  var nameHeading = document.createElement('h2');
+  nameHeading.setAttribute('class', 'player-name');
+  nameHeading.textContent = person.fullName;
+
+  var infoHeading = document.createElement('h4');
+  infoHeading.setAttribute('class', 'player-info');
+  infoHeading.textContent = person.primaryPosition.code + ' | ' + person.height + ' | ' +
+  person.weight + 'lb' + ' | ' + 'Age ' + person.currentAge + ' | ' + person.currentTeam.name;
+
+  var pOne = document.createElement('p')
+  var spanOne = document.createElement('span')
+  pOne.setAttribute('class', 'player-info');
+  pOne.textContent = person.birthCity + ', ' + person.birthCountry;
+  spanOne.setAttribute('class', 'bold');
+  spanOne.textContent = 'Birthplace: '
+  pOne.prepend(spanOne);
+
+
+  var pTwo = document.createElement('p')
+  var spanTwo = document.createElement('span')
+
+  var pThree = document.createElement('p')
+  var spanThree = document.createElement('span')
+
+  $playerPageDiv.appendChild(nameHeading);
+  $playerPageDiv.appendChild(infoHeading);
+  $playerPageDiv.appendChild(pOne);
 }
 
  /*    View Swapping      */
