@@ -5,8 +5,9 @@ var $teamPageDiv = document.querySelector('div[data-view="team-page');
 var $teamSelectOptions = document.getElementsByClassName('team');
 var $homeLogo = document.querySelector('.logo');
 var $playerPageDiv = document.querySelector('div[data-view="player-page');
-var $playerForm = document.querySelector('.player-form')
-var $playerSearch = document.querySelector('.player-search')
+var $playerForm = document.querySelector('.player-form');
+var $playerSearch = document.querySelector('.player-search');
+var $suggestion = document.querySelector('.suggestions');
 
 
 /*      Teams Request     */
@@ -14,6 +15,8 @@ var $playerSearch = document.querySelector('.player-search')
 var teamsList;
 
 var playerIds = [];
+
+var playerNames = []
 
 var teamsXhr = new XMLHttpRequest();
 teamsXhr.open('GET', 'https://statsapi.web.nhl.com/api/v1/teams?expand=team.roster');
@@ -31,8 +34,11 @@ teamsXhr.addEventListener('load', function() {
   for (var z = 0; z < teamsList.length; z++) {
     for (var x = 0; x < teamsList[z].roster.roster.length; x++) {
       var obj = {};
+      var playerObj = {};
       obj[(teamsList[z].roster.roster[x].person.fullName).toLowerCase()] = teamsList[z].roster.roster[x].person.id;
       playerIds.push(obj);
+      playerObj['name'] = (teamsList[z].roster.roster[x].person.fullName);
+      playerNames.push(playerObj);
     }
   }
 })
@@ -44,7 +50,7 @@ $homeLogo.addEventListener('click', function(){
   dataview('home-page');
 })
 
-/*      Submit Listeners      */
+/*      Submit Listener for Team page      */
 
 $teamForm.addEventListener('submit', function(e){
   e.preventDefault();
@@ -56,6 +62,8 @@ $teamForm.addEventListener('submit', function(e){
     $teamForm.reset();
   }
 })
+
+/*      Submit Listener for Player page      */
 
 $playerForm.addEventListener('submit', function(e){
   e.preventDefault();
@@ -78,6 +86,27 @@ $playerForm.addEventListener('submit', function(e){
   playerXhr.send();
 })
 
+$playerSearch.addEventListener('keyup', function(){
+  var input = $playerSearch.value;
+  $suggestion.innerHTML = '';
+  var suggestions = playerNames.filter(function(player) {
+    return player.name.toLowerCase().startsWith(input);
+  })
+  var condensedSuggestions = [];
+  for (var i = 0; i < 6; i++){
+    if(suggestions[i] !== undefined) {
+      condensedSuggestions.push(suggestions[i]);
+    }
+  }
+  condensedSuggestions.forEach(function(suggested) {
+    var div = document.createElement('div');
+    div.innerHTML = suggested.name;
+    $suggestion.appendChild(div);
+  })
+  if (input === '') {
+    $suggestion.innerHTML = ''
+  }
+})
 
 /*     Render Team Page     */
 
@@ -234,11 +263,7 @@ function renderRoster(team) {
   }
 }
 
-/*<h2 class="player-name">Ryan Getzlaf | #15</h2>
-  <h4 class="player-info">C &vert; 6'3" &vert; 228lb &vert; Age: 35 &vert; Anaheim Ducks</h4>
-  <p class="player-info"><span class="bold">Born:</span> 1995-04-22</p>
-  <p class="player-info"><span class="bold">Birthplace: </span> Seskatchewan</p>
-  <p class="player-info"><span class="bold">Shoots: </span>R</p> */
+/*     Render Player Page     */
 
 function renderPlayerPage(person) {
   var nameHeading = document.createElement('h2');

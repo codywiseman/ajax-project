@@ -103,3 +103,11 @@ tr :nth-child(1) {
 .hidden {
   display: none;
 }
+
+.suggestions div {
+  padding: 0.1rem 0.2rem;
+}
+
+.suggestions div:hover {
+  background-color: #999;
+}
