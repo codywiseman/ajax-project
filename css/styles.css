@@ -15,6 +15,7 @@ h1 {
 
 .logo {
   width: 8rem;
+  cursor: pointer;
 }
 
 .logo img {
@@ -55,6 +56,7 @@ h1 {
   color: white;
   width: 22%;
   font-weight: 500;
+  cursor: pointer;
 }
 
 
@@ -75,7 +77,8 @@ h1 {
   margin: 0.2rem 0 0.2rem 1rem;
 }
 
-h3 {
+h3 , .player-info,
+.player-name  {
   text-align: center;
   margin: 0.4rem 0;
 }
@@ -92,11 +95,31 @@ tbody tr:nth-child(odd) {
 
 tr {
   text-align: left;
+  cursor: pointer;
 }
 
 tr :nth-child(1) {
   text-align: center;
   width: 20%;
+}
+
+.justify-left {
+  justify-content: left;
+}
+
+.suggestions div {
+  padding: 0.3rem 1rem;
+  background-color: #eeeeee;
+  border-top: 1px solid #ffffff;
+  border-radius: 0.2rem;
+}
+
+.suggestions div:hover {
+  background-color: #ffffff;
+}
+
+.player-row:hover {
+  color: blue;
 }
 
 .hidden {

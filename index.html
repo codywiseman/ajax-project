@@ -31,13 +31,25 @@
             <input type="submit" value='ENTER' class="submit-button">
           </form>
           <p class="or">OR</p>
-          <form class="row space-between">
-            <input type="search" class="browse" placeholder="Search for a Player">
+          <form class="row space-between player-form">
+            <input type="search" class="browse player-search" placeholder="Search for a Player">
             <input type="submit" value='SEARCH' class="submit-button">
           </form>
+          <div class="row space-between justify-left">
+            <div class="suggestions browse">
+            </div>
+            <div></div>
+          </div>
         </div>
       </div>
       <div class="view hidden" data-view="team-page"></div>
+      <div class="view hidden" data-view="player-page">
+        <!--<h2 class="player-name">Ryan Getzlaf | #15</h2>
+        <h4 class="player-info">C &vert; 6'3" &vert; 228lb &vert; Age: 35 &vert; Anaheim Ducks</h4>
+        <p class="player-info"><span class="bold">Born:</span> 1995-04-22</p>
+        <p class="player-info"><span class="bold">Birthplace: </span> Seskatchewan</p>
+        <p class="player-info"><span class="bold">Shoots: </span>R</p>
+      </div> -->
     </main>
   </div>
   <script src="js/data.js"></script>

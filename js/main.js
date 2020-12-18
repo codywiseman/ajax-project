@@ -4,11 +4,19 @@ var $teamForm = document.querySelector('.team-form')
 var $teamPageDiv = document.querySelector('div[data-view="team-page');
 var $teamSelectOptions = document.getElementsByClassName('team');
 var $homeLogo = document.querySelector('.logo');
+var $playerPageDiv = document.querySelector('div[data-view="player-page');
+var $playerForm = document.querySelector('.player-form');
+var $playerSearch = document.querySelector('.player-search');
+var $suggestion = document.querySelector('.suggestions');
 
 
 /*      Teams Request     */
 
 var teamsList;
+
+var playerIds = [];
+
+var playerNames = []
 
 var teamsXhr = new XMLHttpRequest();
 teamsXhr.open('GET', 'https://statsapi.web.nhl.com/api/v1/teams?expand=team.roster');
@@ -23,17 +31,29 @@ teamsXhr.addEventListener('load', function() {
     teamOption.textContent = teamsList[i].name;
     $teamSelect.appendChild(teamOption);
   }
+  for (var z = 0; z < teamsList.length; z++) {
+    for (var x = 0; x < teamsList[z].roster.roster.length; x++) {
+      var obj = {};
+      var playerObj = {};
+      obj[(teamsList[z].roster.roster[x].person.fullName).toLowerCase()] = teamsList[z].roster.roster[x].person.id;
+      playerIds.push(obj);
+      playerObj['name'] = (teamsList[z].roster.roster[x].person.fullName);
+      playerNames.push(playerObj);
+    }
+  }
 })
 teamsXhr.send();
-
 
 /*      Go to Home Page     */
 
 $homeLogo.addEventListener('click', function(){
+  $teamForm.reset();
+  $playerForm.reset();
+  $suggestion.innerHTML = '';
   dataview('home-page');
 })
 
-/*      Submit Listeners      */
+/*      Submit Listener for Team page      */
 
 $teamForm.addEventListener('submit', function(e){
   e.preventDefault();
@@ -45,6 +65,81 @@ $teamForm.addEventListener('submit', function(e){
     $teamForm.reset();
   }
 })
+
+/*      Submit Listener for Player page      */
+
+$playerForm.addEventListener('submit', function(e){
+  e.preventDefault();
+  var playerXhr = new XMLHttpRequest();
+  var id = $playerSearch.value.toLowerCase();
+  for(var i = 0; i < playerIds.length; i++) {
+    if(playerIds[i].hasOwnProperty(id)) {
+      playerXhr.open('GET', 'https://statsapi.web.nhl.com/api/v1/people/' + (playerIds[i][id]).toString());
+      playerXhr.responseType = 'json';
+      playerXhr.addEventListener('load', function (){
+        var player = playerXhr.response.people[0];
+        $playerPageDiv.innerHTML = '';
+        renderPlayerPage(player);
+        dataview('player-page');
+        $playerForm.reset(player);
+      })
+    }
+  }
+  playerXhr.send();
+})
+
+
+/*       Player seach bar suggestions        */
+
+$playerSearch.addEventListener('keyup', function(){
+  var input = $playerSearch.value;
+  $suggestion.innerHTML = '';
+  var suggestions = playerNames.filter(function(player) {
+    return player.name.toLowerCase().startsWith(input);
+  })
+  var condensedSuggestions = [];
+  for (var i = 0; i < 6; i++){
+    if(suggestions[i] !== undefined) {
+      condensedSuggestions.push(suggestions[i]);
+    }
+  }
+  condensedSuggestions.forEach(function(suggested) {
+    var div = document.createElement('div');
+    div.innerHTML = suggested.name;
+    $suggestion.appendChild(div);
+  })
+  if (input === '') {
+    $suggestion.innerHTML = ''
+  }
+})
+
+$suggestion.addEventListener('click', function(e) {
+  $playerSearch.value = e.target.innerHTML;
+  $suggestion.innerHTML = '';
+})
+
+/*      Click on player on roster to be take to player page       */
+
+document.addEventListener('click', function (e) {
+  if (data.view === 'team-page' && e.target.tagName === 'TD') {
+    var toPlayerPage = e.target.closest('.player-row').innerHTML.toLowerCase();
+    var playerXhr = new XMLHttpRequest();
+    for (var i = 0; i < playerIds.length; i++) {
+      if (playerIds[i].hasOwnProperty(toPlayerPage)) {
+        playerXhr.open('GET', 'https://statsapi.web.nhl.com/api/v1/people/' + (playerIds[i][toPlayerPage]).toString());
+        playerXhr.responseType = 'json';
+        playerXhr.addEventListener('load', function () {
+          var player = playerXhr.response.people[0];
+          $playerPageDiv.innerHTML = '';
+          renderPlayerPage(player);
+          dataview('player-page');
+        })
+      }
+    }
+    playerXhr.send();
+  }
+})
+
 
 /*     Render Team Page     */
 
@@ -142,18 +237,6 @@ function renderTeamPage(team) {
   }
 }
 
-
-/*<h3>Roster<h3>
-  <table class="roster-table">
-    <thead>
-      <tr>
-        <th class="table-num">No.</th>
-        <th>Player</th>
-        <th class="table-position">Position</th>
-      </tr>
-    </thead>
-  </table> */
-
 function renderRoster(team) {
   for(var i = 0; i < teamsList.length; i++) {
     if(teamsList[i].name === team) {
@@ -182,6 +265,7 @@ function renderRoster(team) {
       tHeadThree.textContent = 'Position'
 
       var tableBody = document.createElement('tbody');
+      tableBody.setAttribute('id', 'rosterBody')
 
       headRow.appendChild(tHeadOne);
       headRow.appendChild(tHeadTwo);
@@ -191,12 +275,13 @@ function renderRoster(team) {
       $teamPageDiv.appendChild(tableLabel);
 
       for(var rosterSpot = 0; rosterSpot < teamRoster.length; rosterSpot++) {
-        var tableRow = document.createElement('tr')
+        var tableRow = document.createElement('tr');
 
         var tDataOne = document.createElement('td');
         tDataOne.textContent = teamRoster[rosterSpot].jerseyNumber;
 
         var tDataTwo = document.createElement('td');
+        tDataTwo.setAttribute('class', 'player-row')
         tDataTwo.textContent = teamRoster[rosterSpot].person.fullName;
 
         var tDataThree = document.createElement('td');
@@ -211,6 +296,54 @@ function renderRoster(team) {
       }
     }
   }
+}
+
+/*     Render Player Page     */
+
+function renderPlayerPage(person) {
+  var nameHeading = document.createElement('h2');
+  nameHeading.setAttribute('class', 'player-name');
+  nameHeading.textContent = person.fullName;
+
+  var infoHeading = document.createElement('h4');
+  infoHeading.setAttribute('class', 'player-info');
+  infoHeading.textContent = person.primaryPosition.code + ' | ' + person.height + ' | ' +
+  person.weight + 'lb' + ' | ' + 'Age ' + person.currentAge + ' | ' + person.currentTeam.name;
+
+  var pOne = document.createElement('p')
+  var spanOne = document.createElement('span')
+  pOne.setAttribute('class', 'player-info');
+  pOne.textContent = person.birthCity + ', ' + person.birthCountry;
+  spanOne.setAttribute('class', 'bold');
+  spanOne.textContent = 'Birthplace: '
+  pOne.prepend(spanOne);
+
+
+  var pTwo = document.createElement('p')
+  var spanTwo = document.createElement('span')
+  pTwo.setAttribute('class', 'player-info');
+  pTwo.textContent = person.birthDate
+  spanTwo.setAttribute('class', 'bold');
+  spanTwo.textContent = 'Birthdate: '
+  pTwo.prepend(spanTwo);
+
+  var pThree = document.createElement('p')
+  var spanThree = document.createElement('span')
+  pThree.setAttribute('class', 'player-info');
+  pThree.textContent = person.shootsCatches;
+  spanThree.setAttribute('class', 'bold');
+  if(person.primaryPosition.code === 'G') {
+    spanThree.textContent = 'Catches: '
+  } else {
+    spanThree.textContent = 'Shoots: '
+  }
+  pThree.prepend(spanThree);
+
+  $playerPageDiv.appendChild(nameHeading);
+  $playerPageDiv.appendChild(infoHeading);
+  $playerPageDiv.appendChild(pOne);
+  $playerPageDiv.appendChild(pTwo);
+  $playerPageDiv.appendChild(pThree);
 }
 
  /*    View Swapping      */
