@@ -142,18 +142,6 @@ function renderTeamPage(team) {
   }
 }
 
-
-/*<h3>Roster<h3>
-  <table class="roster-table">
-    <thead>
-      <tr>
-        <th class="table-num">No.</th>
-        <th>Player</th>
-        <th class="table-position">Position</th>
-      </tr>
-    </thead>
-  </table> */
-
 function renderRoster(team) {
   for(var i = 0; i < teamsList.length; i++) {
     if(teamsList[i].name === team) {

@@ -75,7 +75,8 @@ h1 {
   margin: 0.2rem 0 0.2rem 1rem;
 }
 
-h3 {
+h3 , .player-info,
+.player-name  {
   text-align: center;
   margin: 0.4rem 0;
 }
