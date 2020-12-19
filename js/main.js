@@ -68,6 +68,8 @@ $teamForm.addEventListener('submit', function(e){
 
 /*      Submit Listener for Player page      */
 
+var player;
+
 $playerForm.addEventListener('submit', function(e){
   e.preventDefault();
   var playerXhr = new XMLHttpRequest();
@@ -80,7 +82,7 @@ $playerForm.addEventListener('submit', function(e){
       playerXhr.responseType = 'json';
       statsXhr.responseType = 'json';
       playerXhr.addEventListener('load', function (){
-        var player = playerXhr.response.people[0];
+        player = playerXhr.response.people[0];
         $playerPageDiv.innerHTML = '';
         renderPlayerPage(player);
         dataview('player-page');
@@ -88,7 +90,6 @@ $playerForm.addEventListener('submit', function(e){
       })
       statsXhr.addEventListener('load', function () {
         var playerStats = statsXhr.response.stats[0].splits;
-        console.log('player stats:', playerStats)
         renderPlayerStats(playerStats);
       })
     }
@@ -133,19 +134,27 @@ document.addEventListener('click', function (e) {
   if (data.view === 'team-page' && e.target.tagName === 'TD') {
     var toPlayerPage = e.target.closest('.player-row').innerHTML.toLowerCase();
     var playerXhr = new XMLHttpRequest();
+    var statsXhr = new XMLHttpRequest();
     for (var i = 0; i < playerIds.length; i++) {
       if (playerIds[i].hasOwnProperty(toPlayerPage)) {
         playerXhr.open('GET', 'https://statsapi.web.nhl.com/api/v1/people/' + (playerIds[i][toPlayerPage]).toString());
+        statsXhr.open('GET', ' https://statsapi.web.nhl.com/api/v1/people/' + (playerIds[i][toPlayerPage]).toString() + '/stats/?stats=yearByYear');
         playerXhr.responseType = 'json';
+        statsXhr.responseType = 'json';
         playerXhr.addEventListener('load', function () {
           var player = playerXhr.response.people[0];
           $playerPageDiv.innerHTML = '';
           renderPlayerPage(player);
           dataview('player-page');
         })
+        statsXhr.addEventListener('load', function () {
+          var playerStats = statsXhr.response.stats[0].splits;
+          renderPlayerStats(playerStats);
+        })
       }
     }
     playerXhr.send();
+    statsXhr.send();
   }
 })
 
@@ -382,6 +391,106 @@ function renderPlayerStats(stats) {
   var th4 = document.createElement('th');
   th4.textContent = 'GP'
 
+  $playerPageDiv.appendChild(statsTitle);
+  $playerPageDiv.appendChild(tableDiv);
+  tableDiv.appendChild(table);
+  table.appendChild(thead);
+  thead.appendChild(trowOne);
+  trowOne.appendChild(th1);
+  trowOne.appendChild(th2);
+  trowOne.appendChild(th3);
+  trowOne.appendChild(th4);
+
+  if(player.primaryPosition.code === 'G') {
+    var goalieHeadingOne = document.createElement('th');
+    goalieHeadingOne.textContent = 'W'
+
+    var goalieHeadingTwo = document.createElement('th');
+    goalieHeadingTwo.textContent = 'L'
+
+    var goalieHeadingThree = document.createElement('th');
+    goalieHeadingThree.textContent = 'GA'
+
+    var goalieHeadingFour = document.createElement('th');
+    goalieHeadingFour.textContent = 'GAA'
+
+    var goalieHeadingFive = document.createElement('th');
+    goalieHeadingFive.textContent = 'SO'
+
+    var goalieHeadingSix = document.createElement('th');
+    goalieHeadingSix.textContent = 'SAVES'
+
+    var goalieHeadingSeven = document.createElement('th');
+    goalieHeadingSeven.textContent = 'SV%'
+
+    var tbody = document.createElement('tbody');
+
+    trowOne.appendChild(goalieHeadingOne);
+    trowOne.appendChild(goalieHeadingTwo);
+    trowOne.appendChild(goalieHeadingThree);
+    trowOne.appendChild(goalieHeadingFour);
+    trowOne.appendChild(goalieHeadingFive);
+    trowOne.appendChild(goalieHeadingSix);
+    trowOne.appendChild(goalieHeadingSeven);
+    table.appendChild(tbody);
+
+    for (var x = (stats.length - 1); x > 0; x--) {
+      var tbrow = document.createElement('tr');
+      tbrow.setAttribute('class', 'stats-row');
+
+      var td1 = document.createElement('td');
+      td1.textContent = stats[x].season;
+
+      var td2 = document.createElement('td');
+      td2.textContent = stats[x].team.name;
+
+      var td3 = document.createElement('td');
+      if (stats[x].league.name === 'National Hockey League') {
+        td3.textContent = 'NHL'
+      } else {
+        td3.textContent = stats[x].league.name;
+      }
+
+      var td4 = document.createElement('td');
+      td4.textContent = stats[x].stat.games;
+
+      var td5 = document.createElement('td');
+      td5.textContent = stats[x].stat.wins;
+
+      var td6 = document.createElement('td');
+      td6.textContent = stats[x].stat.losses;
+
+      var td7 = document.createElement('td');
+      td7.textContent = stats[x].stat.goalsAgainst;
+
+      var td8 = document.createElement('td');
+      td8.textContent = stats[x].stat.goalAgainstAverage;
+
+      var td9 = document.createElement('td');
+      td9.textContent = stats[x].stat.shutouts;
+
+      var td10 = document.createElement('td');
+      td10.textContent = stats[x].stat.saves;
+
+      var td11 = document.createElement('td');
+      td11.textContent = stats[x].stat.savePercentage;
+
+      tbrow.appendChild(td1);
+      tbrow.appendChild(td2);
+      tbrow.appendChild(td3);
+      tbrow.appendChild(td4);
+      tbrow.appendChild(td5);
+      tbrow.appendChild(td6);
+      tbrow.appendChild(td7);
+      tbrow.appendChild(td8);
+      tbrow.appendChild(td9);
+      tbrow.appendChild(td10);
+      tbrow.appendChild(td11);
+      tbody.appendChild(tbrow);
+    }
+  }
+  else {
+
   var th5 = document.createElement('th');
   th5.textContent = 'G'
 
@@ -418,9 +527,6 @@ function renderPlayerStats(stats) {
   var th16 = document.createElement('th');
   th16.textContent = 'TOI'
 
-  var th17 = document.createElement('th');
-  th17.textContent = 'FOW'
-
   var th18 = document.createElement('th');
   th18.textContent = 'FO%'
 
@@ -432,17 +538,8 @@ function renderPlayerStats(stats) {
 
   var tbody = document.createElement('tbody');
 
-  $playerPageDiv.appendChild(statsTitle);
-  $playerPageDiv.appendChild(tableDiv);
-  tableDiv.appendChild(table);
-  table.appendChild(thead);
-  thead.appendChild(trowOne);
-  trowOne.appendChild(th1);
-  trowOne.appendChild(th2);
-  trowOne.appendChild(th3);
-  trowOne.appendChild(th4);
   trowOne.appendChild(th5);
-  trowOne.appendChild(th5);
+  trowOne.appendChild(th6);
   trowOne.appendChild(th7);
   trowOne.appendChild(th8);
   trowOne.appendChild(th9);
@@ -453,13 +550,12 @@ function renderPlayerStats(stats) {
   trowOne.appendChild(th14);
   trowOne.appendChild(th15);
   trowOne.appendChild(th16);
-  trowOne.appendChild(th17);
   trowOne.appendChild(th18);
   trowOne.appendChild(th19);
   trowOne.appendChild(th20);
   table.appendChild(tbody);
 
-  for(var i = 0; i < stats.length; i++) {
+  for (var i = (stats.length - 1); i > 0; i--) {
     var tbrow = document.createElement('tr');
     tbrow.setAttribute('class', 'stats-row');
 
@@ -467,93 +563,85 @@ function renderPlayerStats(stats) {
     td1.textContent = stats[i].season;
 
     var td2 = document.createElement('td');
-    td2.textContent = 'TM'
+    td2.textContent = stats[i].team.name;
 
     var td3 = document.createElement('td');
-    td3.textContent = 'LG'
+    if (stats[i].league.name === 'National Hockey League') {
+      td3.textContent = 'NHL'
+    } else {
+      td3.textContent = stats[i].league.name;
+    }
 
     var td4 = document.createElement('td');
-    td4.textContent = 'GP'
+    td4.textContent = stats[i].stat.games;
 
     var td5 = document.createElement('td');
-    td5.textContent = 'G'
+    td5.textContent = stats[i].stat.goals;
 
     var td6 = document.createElement('td');
-    td6.textContent = 'A'
+    td6.textContent = stats[i].stat.assists;
 
     var td7 = document.createElement('td');
-    td7.textContent = 'PTS'
+    td7.textContent = stats[i].stat.points;
 
     var td8 = document.createElement('td');
-    td8.textContent = 'S'
+    td8.textContent = stats[i].stat.shots;
 
     var td9 = document.createElement('td');
-    td9.textContent = 'S%'
+    td9.textContent = stats[i].stat.shotPct;
 
     var td10 = document.createElement('td');
-    td10.textContent = '+/-'
+    td10.textContent = stats[i].stat.plusMinus;
 
     var td11 = document.createElement('td');
-    td11.textContent = 'PIM'
+    td11.textContent = stats[i].stat.penaltyMinutes;
 
     var td12 = document.createElement('td');
-    td12.textContent = 'SHG'
+    td12.textContent = stats[i].stat.shortHandedGoals;
 
     var td13 = document.createElement('td');
-    td13.textContent = 'PPG'
+    td13.textContent = stats[i].stat.powerPlayGoals;
 
     var td14 = document.createElement('td');
-    td14.textContent = 'GWG'
+    td14.textContent = stats[i].stat.gameWinningGoals;
 
     var td15 = document.createElement('td');
-    td15.textContent = 'OTG'
+    td15.textContent = stats[i].stat.overTimeGoals;
 
     var td16 = document.createElement('td');
-    td16.textContent = 'TOI'
-
-    var td17 = document.createElement('td');
-    td17.textContent = 'FOW'
+    td16.textContent = stats[i].stat.timeOnIce;
 
     var td18 = document.createElement('td');
-    td18.textContent = 'FO%'
+    td18.textContent = stats[i].stat.faceOffPct;
 
     var td19 = document.createElement('td');
-    td19.textContent = 'BLK'
+    td19.textContent = stats[i].stat.blocked;
 
     var td20 = document.createElement('td');
-    td20.textContent = 'HITS'
+    td20.textContent = stats[i].stat.hits;
 
-    tbrow.appendChild(td1)
-
+    tbrow.appendChild(td1);
+    tbrow.appendChild(td2);
+    tbrow.appendChild(td3);
+    tbrow.appendChild(td4);
+    tbrow.appendChild(td5);
+    tbrow.appendChild(td6);
+    tbrow.appendChild(td7);
+    tbrow.appendChild(td8);
+    tbrow.appendChild(td9);
+    tbrow.appendChild(td10);
+    tbrow.appendChild(td11);
+    tbrow.appendChild(td12);
+    tbrow.appendChild(td13);
+    tbrow.appendChild(td14);
+    tbrow.appendChild(td15);
+    tbrow.appendChild(td16);
+    tbrow.appendChild(td18);
+    tbrow.appendChild(td19);
+    tbrow.appendChild(td20);
+    tbody.appendChild(tbrow)
+    }
   }
-/*<h4>Statistics</h4>
-<div class="stats-table-div">
- <table class="stats-table">
-   <tbody>
-     <tr class="stats-row">
-       <td>20122013</td>
-       <td>ANA</td>
-       <td>NHL</td>
-       <td>82</td>
-       <td>31</td>
-       <td>43</td>
-       <td>111</td>
-       <td>32%</td>
-       <td>2</td>
-       <td>28</td>
-       <td>1</td>
-       <td>16</td>
-       <td>7</td>
-       <td>2</td>
-       <td>2</td>
-       <td>1111.54</td>
-       <td>140</td>
-       <td>48%</td>
-       <td>98</td>
-       <td>23</td>
-     </tr>
-   </tbody>
- </table> */
 }
 
 
