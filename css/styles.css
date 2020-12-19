@@ -122,6 +122,18 @@ tr :nth-child(1) {
   color: blue;
 }
 
+.stats-table-div {
+  overflow-x: scroll;
+}
+
+.stats-row {
+  text-align: center;
+}
+
+.stats-row td {
+  padding: 0.5rem 1rem;
+}
+
 .hidden {
   display: none;
 }

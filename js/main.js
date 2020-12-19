@@ -71,11 +71,14 @@ $teamForm.addEventListener('submit', function(e){
 $playerForm.addEventListener('submit', function(e){
   e.preventDefault();
   var playerXhr = new XMLHttpRequest();
+  var statsXhr = new XMLHttpRequest();
   var id = $playerSearch.value.toLowerCase();
   for(var i = 0; i < playerIds.length; i++) {
     if(playerIds[i].hasOwnProperty(id)) {
       playerXhr.open('GET', 'https://statsapi.web.nhl.com/api/v1/people/' + (playerIds[i][id]).toString());
+      statsXhr.open('GET', ' https://statsapi.web.nhl.com/api/v1/people/' + (playerIds[i][id]).toString() + '/stats/?stats=yearByYear');
       playerXhr.responseType = 'json';
+      statsXhr.responseType = 'json';
       playerXhr.addEventListener('load', function (){
         var player = playerXhr.response.people[0];
         $playerPageDiv.innerHTML = '';
@@ -83,9 +86,15 @@ $playerForm.addEventListener('submit', function(e){
         dataview('player-page');
         $playerForm.reset(player);
       })
+      statsXhr.addEventListener('load', function () {
+        var playerStats = statsXhr.response.stats[0].splits;
+        console.log('player stats:', playerStats)
+        renderPlayerStats(playerStats);
+      })
     }
   }
   playerXhr.send();
+  statsXhr.send();
 })
 
 
@@ -345,6 +354,208 @@ function renderPlayerPage(person) {
   $playerPageDiv.appendChild(pTwo);
   $playerPageDiv.appendChild(pThree);
 }
+
+function renderPlayerStats(stats) {
+  var statsTitle = document.createElement('h4');
+  statsTitle.textContent = 'Statistics';
+
+  var tableDiv = document.createElement('div');
+  tableDiv.setAttribute('class', 'stats-table-div');
+
+  var table  = document.createElement('table');
+  table.setAttribute('class', 'stats-table');
+
+  var thead = document.createElement('thead');
+
+  var trowOne = document.createElement('tr');
+  trowOne.setAttribute('class', 'stats-row');
+
+  var th1 = document.createElement('th');
+  th1.textContent = 'YR'
+
+  var th2 = document.createElement('th');
+  th2.textContent = 'TM'
+
+  var th3 = document.createElement('th');
+  th3.textContent = 'LG'
+
+  var th4 = document.createElement('th');
+  th4.textContent = 'GP'
+
+  var th5 = document.createElement('th');
+  th5.textContent = 'G'
+
+  var th6 = document.createElement('th');
+  th6.textContent = 'A'
+
+  var th7 = document.createElement('th');
+  th7.textContent = 'PTS'
+
+  var th8 = document.createElement('th');
+  th8.textContent = 'S'
+
+  var th9 = document.createElement('th');
+  th9.textContent = 'S%'
+
+  var th10 = document.createElement('th');
+  th10.textContent = '+/-'
+
+  var th11 = document.createElement('th');
+  th11.textContent = 'PIM'
+
+  var th12 = document.createElement('th');
+  th12.textContent = 'SHG'
+
+  var th13 = document.createElement('th');
+  th13.textContent = 'PPG'
+
+  var th14 = document.createElement('th');
+  th14.textContent = 'GWG'
+
+  var th15 = document.createElement('th');
+  th15.textContent = 'OTG'
+
+  var th16 = document.createElement('th');
+  th16.textContent = 'TOI'
+
+  var th17 = document.createElement('th');
+  th17.textContent = 'FOW'
+
+  var th18 = document.createElement('th');
+  th18.textContent = 'FO%'
+
+  var th19 = document.createElement('th');
+  th19.textContent = 'BLK'
+
+  var th20 = document.createElement('th');
+  th20.textContent = 'HITS'
+
+  var tbody = document.createElement('tbody');
+
+  $playerPageDiv.appendChild(statsTitle);
+  $playerPageDiv.appendChild(tableDiv);
+  tableDiv.appendChild(table);
+  table.appendChild(thead);
+  thead.appendChild(trowOne);
+  trowOne.appendChild(th1);
+  trowOne.appendChild(th2);
+  trowOne.appendChild(th3);
+  trowOne.appendChild(th4);
+  trowOne.appendChild(th5);
+  trowOne.appendChild(th5);
+  trowOne.appendChild(th7);
+  trowOne.appendChild(th8);
+  trowOne.appendChild(th9);
+  trowOne.appendChild(th10);
+  trowOne.appendChild(th11);
+  trowOne.appendChild(th12);
+  trowOne.appendChild(th13);
+  trowOne.appendChild(th14);
+  trowOne.appendChild(th15);
+  trowOne.appendChild(th16);
+  trowOne.appendChild(th17);
+  trowOne.appendChild(th18);
+  trowOne.appendChild(th19);
+  trowOne.appendChild(th20);
+  table.appendChild(tbody);
+
+  for(var i = 0; i < stats.length; i++) {
+    var tbrow = document.createElement('tr');
+    tbrow.setAttribute('class', 'stats-row');
+
+    var td1 = document.createElement('td');
+    td1.textContent = stats[i].season;
+
+    var td2 = document.createElement('td');
+    td2.textContent = 'TM'
+
+    var td3 = document.createElement('td');
+    td3.textContent = 'LG'
+
+    var td4 = document.createElement('td');
+    td4.textContent = 'GP'
+
+    var td5 = document.createElement('td');
+    td5.textContent = 'G'
+
+    var td6 = document.createElement('td');
+    td6.textContent = 'A'
+
+    var td7 = document.createElement('td');
+    td7.textContent = 'PTS'
+
+    var td8 = document.createElement('td');
+    td8.textContent = 'S'
+
+    var td9 = document.createElement('td');
+    td9.textContent = 'S%'
+
+    var td10 = document.createElement('td');
+    td10.textContent = '+/-'
+
+    var td11 = document.createElement('td');
+    td11.textContent = 'PIM'
+
+    var td12 = document.createElement('td');
+    td12.textContent = 'SHG'
+
+    var td13 = document.createElement('td');
+    td13.textContent = 'PPG'
+
+    var td14 = document.createElement('td');
+    td14.textContent = 'GWG'
+
+    var td15 = document.createElement('td');
+    td15.textContent = 'OTG'
+
+    var td16 = document.createElement('td');
+    td16.textContent = 'TOI'
+
+    var td17 = document.createElement('td');
+    td17.textContent = 'FOW'
+
+    var td18 = document.createElement('td');
+    td18.textContent = 'FO%'
+
+    var td19 = document.createElement('td');
+    td19.textContent = 'BLK'
+
+    var td20 = document.createElement('td');
+    td20.textContent = 'HITS'
+
+    tbrow.appendChild(td1)
+
+  }
+/*<h4>Statistics</h4>
+<div class="stats-table-div">
+ <table class="stats-table">
+   <tbody>
+     <tr class="stats-row">
+       <td>20122013</td>
+       <td>ANA</td>
+       <td>NHL</td>
+       <td>82</td>
+       <td>31</td>
+       <td>43</td>
+       <td>111</td>
+       <td>32%</td>
+       <td>2</td>
+       <td>28</td>
+       <td>1</td>
+       <td>16</td>
+       <td>7</td>
+       <td>2</td>
+       <td>2</td>
+       <td>1111.54</td>
+       <td>140</td>
+       <td>48%</td>
+       <td>98</td>
+       <td>23</td>
+     </tr>
+   </tbody>
+ </table> */
+}
+
 
  /*    View Swapping      */
 
