@@ -8,6 +8,7 @@ var $playerPageDiv = document.querySelector('div[data-view="player-page');
 var $playerForm = document.querySelector('.player-form');
 var $playerSearch = document.querySelector('.player-search');
 var $suggestion = document.querySelector('.suggestions');
+var $rosterTable = document.querySelector('.roster-table');
 
 
 /*      Teams Request     */
@@ -137,6 +138,7 @@ document.addEventListener('click', function (e) {
     var statsXhr = new XMLHttpRequest();
     for (var i = 0; i < playerIds.length; i++) {
       if (playerIds[i].hasOwnProperty(toPlayerPage)) {
+        debugger;
         playerXhr.open('GET', 'https://statsapi.web.nhl.com/api/v1/people/' + (playerIds[i][toPlayerPage]).toString());
         statsXhr.open('GET', ' https://statsapi.web.nhl.com/api/v1/people/' + (playerIds[i][toPlayerPage]).toString() + '/stats/?stats=yearByYear');
         playerXhr.responseType = 'json';
@@ -151,6 +153,7 @@ document.addEventListener('click', function (e) {
           var playerStats = statsXhr.response.stats[0].splits;
           renderPlayerStats(playerStats);
         })
+        i = playerIds.length;
       }
     }
     playerXhr.send();
@@ -199,7 +202,7 @@ function renderTeamPage(team) {
   for (var i = 0; i < teamsList.length; i++) {
     if (teamsList[i].name === team) {
       var divOne = document.createElement('div');
-      divOne.setAttribute('class', 'row my-2');
+      divOne.setAttribute('class', 'flex-col my-2');
 
       var teamLogo = document.createElement('img');
       teamLogo.setAttribute('src', teamLogoImages[team])
