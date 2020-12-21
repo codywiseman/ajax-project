@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<!-- saved from url=(0052)file:///Users/cjwiseman/lfz/ajax-project/index.html? -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AJAX Project</title>
+  <link rel="stylesheet" href="./AJAX Project_files/all.min.css">
+  <link rel="preconnect" href="https://fonts.gstatic.com/">
+  <link href="./AJAX Project_files/css2" rel="stylesheet">
+  <link rel="stylesheet" href="./AJAX Project_files/reset.css">
+  <link rel="stylesheet" href="./AJAX Project_files/layout.css">
+  <link rel="stylesheet" href="./AJAX Project_files/styles.css">
+</head>
+<body>
+  <header class="row">
+    <div class="logo">
+      <img src="./AJAX Project_files/NHLlogo.png" alt="NHL Logo">
+    </div>
+    <div>
+      <h1>The Biscuit</h1>
+    <div>
+  </div></div></header>
+  <div class="container">
+    <main>
+      <div class="view" data-view="home-page">
+        <div class="flex-column row-height">
+          <form class="row space-between team-form">
+            <select name="team-select" class="browse" id="team-select">
+              <option value="select-team" selected="" disabled="">Select Team</option>
+            <option value="Devils" class="team">New Jersey Devils</option><option value="Islanders" class="team">New York Islanders</option><option value="Rangers" class="team">New York Rangers</option><option value="Flyers" class="team">Philadelphia Flyers</option><option value="Penguins" class="team">Pittsburgh Penguins</option><option value="Bruins" class="team">Boston Bruins</option><option value="Sabres" class="team">Buffalo Sabres</option><option value="Canadiens" class="team">Montréal Canadiens</option><option value="Senators" class="team">Ottawa Senators</option><option value="Maple Leafs" class="team">Toronto Maple Leafs</option><option value="Hurricanes" class="team">Carolina Hurricanes</option><option value="Panthers" class="team">Florida Panthers</option><option value="Lightning" class="team">Tampa Bay Lightning</option><option value="Capitals" class="team">Washington Capitals</option><option value="Blackhawks" class="team">Chicago Blackhawks</option><option value="Red Wings" class="team">Detroit Red Wings</option><option value="Predators" class="team">Nashville Predators</option><option value="Blues" class="team">St. Louis Blues</option><option value="Flames" class="team">Calgary Flames</option><option value="Avalanche" class="team">Colorado Avalanche</option><option value="Oilers" class="team">Edmonton Oilers</option><option value="Canucks" class="team">Vancouver Canucks</option><option value="Ducks" class="team">Anaheim Ducks</option><option value="Stars" class="team">Dallas Stars</option><option value="Kings" class="team">Los Angeles Kings</option><option value="Sharks" class="team">San Jose Sharks</option><option value="Blue Jackets" class="team">Columbus Blue Jackets</option><option value="Wild" class="team">Minnesota Wild</option><option value="Jets" class="team">Winnipeg Jets</option><option value="Coyotes" class="team">Arizona Coyotes</option><option value="Golden Knights" class="team">Vegas Golden Knights</option></select>
+            <input type="submit" value="ENTER" class="submit-button">
+          </form>
+          <p class="or">OR</p>
+          <form class="row space-between">
+            <input type="search" class="browse" placeholder="Search for a Player">
+            <input type="submit" value="SEARCH" class="submit-button">
+          </form>
+        </div>
+      </div>
+      <div class="view hidden" data-view="team-page"></div>
+    </main>
+  </div>
+  <script src="./AJAX Project_files/data.js"></script>
+  <script src="./AJAX Project_files/main.js"></script>
+
+
+</body></html>
