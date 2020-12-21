@@ -87,12 +87,13 @@ $playerForm.addEventListener('submit', function(e){
         $playerPageDiv.innerHTML = '';
         renderPlayerPage(player);
         dataview('player-page');
-        $playerForm.reset(player);
+        $playerForm.reset();
       })
       statsXhr.addEventListener('load', function () {
-        var playerStats = statsXhr.response.stats[0].splits;
-        renderPlayerStats(playerStats);
+        console.log(player)
+        renderPlayerStats(statsXhr.response.stats[0].splits);
       })
+      i = playerIds.length;
     }
   }
   playerXhr.send();
@@ -149,8 +150,7 @@ document.addEventListener('click', function (e) {
           dataview('player-page');
         })
         statsXhr.addEventListener('load', function () {
-          var playerStats = statsXhr.response.stats[0].splits;
-          renderPlayerStats(playerStats);
+          renderPlayerStats(statsXhr.response.stats[0].splits);
         })
         i = playerIds.length;
       }
