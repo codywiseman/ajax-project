@@ -138,7 +138,6 @@ document.addEventListener('click', function (e) {
     var statsXhr = new XMLHttpRequest();
     for (var i = 0; i < playerIds.length; i++) {
       if (playerIds[i].hasOwnProperty(toPlayerPage)) {
-        debugger;
         playerXhr.open('GET', 'https://statsapi.web.nhl.com/api/v1/people/' + (playerIds[i][toPlayerPage]).toString());
         statsXhr.open('GET', ' https://statsapi.web.nhl.com/api/v1/people/' + (playerIds[i][toPlayerPage]).toString() + '/stats/?stats=yearByYear');
         playerXhr.responseType = 'json';
