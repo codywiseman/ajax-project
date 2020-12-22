@@ -8,6 +8,7 @@ var $playerPageDiv = document.querySelector('div[data-view="player-page');
 var $playerForm = document.querySelector('.player-form');
 var $playerSearch = document.querySelector('.player-search');
 var $suggestion = document.querySelector('.suggestions');
+var $rosterTable = document.querySelector('.roster-table');
 
 
 /*      Teams Request     */
@@ -68,21 +69,32 @@ $teamForm.addEventListener('submit', function(e){
 
 /*      Submit Listener for Player page      */
 
+var player;
+
 $playerForm.addEventListener('submit', function(e){
   e.preventDefault();
   var playerXhr = new XMLHttpRequest();
-  var id = $playerSearch.value.toLowerCase();
+  var idName = $playerSearch.value.toLowerCase();
   for(var i = 0; i < playerIds.length; i++) {
-    if(playerIds[i].hasOwnProperty(id)) {
-      playerXhr.open('GET', 'https://statsapi.web.nhl.com/api/v1/people/' + (playerIds[i][id]).toString());
+    if(playerIds[i].hasOwnProperty(idName)) {
+      id = playerIds[i][idName]
+      playerXhr.open('GET', 'https://statsapi.web.nhl.com/api/v1/people/' + id.toString());
       playerXhr.responseType = 'json';
       playerXhr.addEventListener('load', function (){
-        var player = playerXhr.response.people[0];
+        player = playerXhr.response.people[0];
         $playerPageDiv.innerHTML = '';
         renderPlayerPage(player);
-        dataview('player-page');
-        $playerForm.reset(player);
+        var statsXhr = new XMLHttpRequest();
+        statsXhr.open('GET', ' https://statsapi.web.nhl.com/api/v1/people/' + id.toString() + '/stats/?stats=yearByYear');
+        statsXhr.responseType = 'json';
+        statsXhr.addEventListener('load', function () {
+          renderPlayerStats(statsXhr.response.stats[0].splits);
+          dataview('player-page');
+          $playerForm.reset();
+        })
+        statsXhr.send();
       })
+      i = playerIds.length;
     }
   }
   playerXhr.send();
@@ -122,18 +134,28 @@ $suggestion.addEventListener('click', function(e) {
 
 document.addEventListener('click', function (e) {
   if (data.view === 'team-page' && e.target.tagName === 'TD') {
-    var toPlayerPage = e.target.closest('.player-row').innerHTML.toLowerCase();
+    var idName = e.target.closest('.player-row').innerHTML.toLowerCase();
     var playerXhr = new XMLHttpRequest();
     for (var i = 0; i < playerIds.length; i++) {
-      if (playerIds[i].hasOwnProperty(toPlayerPage)) {
-        playerXhr.open('GET', 'https://statsapi.web.nhl.com/api/v1/people/' + (playerIds[i][toPlayerPage]).toString());
+      if (playerIds[i].hasOwnProperty(idName)) {
+        var id = playerIds[i][idName];
+        playerXhr.open('GET', 'https://statsapi.web.nhl.com/api/v1/people/' + id.toString());
         playerXhr.responseType = 'json';
         playerXhr.addEventListener('load', function () {
-          var player = playerXhr.response.people[0];
+          player = playerXhr.response.people[0];
           $playerPageDiv.innerHTML = '';
           renderPlayerPage(player);
-          dataview('player-page');
+          var statsXhr = new XMLHttpRequest();
+          statsXhr.open('GET', ' https://statsapi.web.nhl.com/api/v1/people/' + id.toString() + '/stats/?stats=yearByYear');
+          statsXhr.responseType = 'json';
+          statsXhr.addEventListener('load', function () {
+            renderPlayerStats(statsXhr.response.stats[0].splits);
+            dataview('player-page');
+            scroll(0, 0);
+          })
+          statsXhr.send();
         })
+        i = playerIds.length;
       }
     }
     playerXhr.send();
@@ -181,7 +203,7 @@ function renderTeamPage(team) {
   for (var i = 0; i < teamsList.length; i++) {
     if (teamsList[i].name === team) {
       var divOne = document.createElement('div');
-      divOne.setAttribute('class', 'row team-row-1');
+      divOne.setAttribute('class', 'flex-col my-2');
 
       var teamLogo = document.createElement('img');
       teamLogo.setAttribute('src', teamLogoImages[team])
@@ -345,6 +367,287 @@ function renderPlayerPage(person) {
   $playerPageDiv.appendChild(pTwo);
   $playerPageDiv.appendChild(pThree);
 }
+
+function renderPlayerStats(stats) {
+  var statsTitle = document.createElement('h4');
+  statsTitle.textContent = 'Statistics';
+
+  var tableDiv = document.createElement('div');
+  tableDiv.setAttribute('class', 'stats-table-div table-responsive');
+
+  var table  = document.createElement('table');
+  table.setAttribute('class', 'stats-table');
+
+  var thead = document.createElement('thead');
+
+  var trowOne = document.createElement('tr');
+  trowOne.setAttribute('class', 'stats-row');
+
+  var th1 = document.createElement('th');
+  th1.textContent = 'YR'
+
+  var th2 = document.createElement('th');
+  th2.textContent = 'TM'
+
+  var th3 = document.createElement('th');
+  th3.textContent = 'LG'
+
+  var th4 = document.createElement('th');
+  th4.textContent = 'GP'
+
+  $playerPageDiv.appendChild(statsTitle);
+  $playerPageDiv.appendChild(tableDiv);
+  tableDiv.appendChild(table);
+  table.appendChild(thead);
+  thead.appendChild(trowOne);
+  trowOne.appendChild(th1);
+  trowOne.appendChild(th2);
+  trowOne.appendChild(th3);
+  trowOne.appendChild(th4);
+
+  if(player.primaryPosition.code === 'G') {
+    var goalieHeadingOne = document.createElement('th');
+    goalieHeadingOne.textContent = 'W'
+
+    var goalieHeadingTwo = document.createElement('th');
+    goalieHeadingTwo.textContent = 'L'
+
+    var goalieHeadingThree = document.createElement('th');
+    goalieHeadingThree.textContent = 'GA'
+
+    var goalieHeadingFour = document.createElement('th');
+    goalieHeadingFour.textContent = 'GAA'
+
+    var goalieHeadingFive = document.createElement('th');
+    goalieHeadingFive.textContent = 'SO'
+
+    var goalieHeadingSix = document.createElement('th');
+    goalieHeadingSix.textContent = 'SAVES'
+
+    var goalieHeadingSeven = document.createElement('th');
+    goalieHeadingSeven.textContent = 'SV%'
+
+    var tbody = document.createElement('tbody');
+
+    trowOne.appendChild(goalieHeadingOne);
+    trowOne.appendChild(goalieHeadingTwo);
+    trowOne.appendChild(goalieHeadingThree);
+    trowOne.appendChild(goalieHeadingFour);
+    trowOne.appendChild(goalieHeadingFive);
+    trowOne.appendChild(goalieHeadingSix);
+    trowOne.appendChild(goalieHeadingSeven);
+    table.appendChild(tbody);
+
+    for (var x = (stats.length - 1); x > 0; x--) {
+      var tbrow = document.createElement('tr');
+      tbrow.setAttribute('class', 'stats-row');
+
+      var td1 = document.createElement('td');
+      td1.textContent = stats[x].season;
+
+      var td2 = document.createElement('td');
+      td2.textContent = stats[x].team.name;
+
+      var td3 = document.createElement('td');
+      if (stats[x].league.name === 'National Hockey League') {
+        td3.textContent = 'NHL'
+      } else {
+        td3.textContent = stats[x].league.name;
+      }
+
+      var td4 = document.createElement('td');
+      td4.textContent = stats[x].stat.games;
+
+      var td5 = document.createElement('td');
+      td5.textContent = stats[x].stat.wins;
+
+      var td6 = document.createElement('td');
+      td6.textContent = stats[x].stat.losses;
+
+      var td7 = document.createElement('td');
+      td7.textContent = stats[x].stat.goalsAgainst;
+
+      var td8 = document.createElement('td');
+      td8.textContent = stats[x].stat.goalAgainstAverage;
+
+      var td9 = document.createElement('td');
+      td9.textContent = stats[x].stat.shutouts;
+
+      var td10 = document.createElement('td');
+      td10.textContent = stats[x].stat.saves;
+
+      var td11 = document.createElement('td');
+      td11.textContent = stats[x].stat.savePercentage;
+
+      tbrow.appendChild(td1);
+      tbrow.appendChild(td2);
+      tbrow.appendChild(td3);
+      tbrow.appendChild(td4);
+      tbrow.appendChild(td5);
+      tbrow.appendChild(td6);
+      tbrow.appendChild(td7);
+      tbrow.appendChild(td8);
+      tbrow.appendChild(td9);
+      tbrow.appendChild(td10);
+      tbrow.appendChild(td11);
+      tbody.appendChild(tbrow);
+    }
+  }
+  else {
+
+  var th5 = document.createElement('th');
+  th5.textContent = 'G'
+
+  var th6 = document.createElement('th');
+  th6.textContent = 'A'
+
+  var th7 = document.createElement('th');
+  th7.textContent = 'PTS'
+
+  var th8 = document.createElement('th');
+  th8.textContent = 'S'
+
+  var th9 = document.createElement('th');
+  th9.textContent = 'S%'
+
+  var th10 = document.createElement('th');
+  th10.textContent = '+/-'
+
+  var th11 = document.createElement('th');
+  th11.textContent = 'PIM'
+
+  var th12 = document.createElement('th');
+  th12.textContent = 'SHG'
+
+  var th13 = document.createElement('th');
+  th13.textContent = 'PPG'
+
+  var th14 = document.createElement('th');
+  th14.textContent = 'GWG'
+
+  var th15 = document.createElement('th');
+  th15.textContent = 'OTG'
+
+  var th16 = document.createElement('th');
+  th16.textContent = 'TOI'
+
+  var th18 = document.createElement('th');
+  th18.textContent = 'FO%'
+
+  var th19 = document.createElement('th');
+  th19.textContent = 'BLK'
+
+  var th20 = document.createElement('th');
+  th20.textContent = 'HITS'
+
+  var tbody = document.createElement('tbody');
+
+  trowOne.appendChild(th5);
+  trowOne.appendChild(th6);
+  trowOne.appendChild(th7);
+  trowOne.appendChild(th8);
+  trowOne.appendChild(th9);
+  trowOne.appendChild(th10);
+  trowOne.appendChild(th11);
+  trowOne.appendChild(th12);
+  trowOne.appendChild(th13);
+  trowOne.appendChild(th14);
+  trowOne.appendChild(th15);
+  trowOne.appendChild(th16);
+  trowOne.appendChild(th18);
+  trowOne.appendChild(th19);
+  trowOne.appendChild(th20);
+  table.appendChild(tbody);
+
+  for (var i = (stats.length - 1); i > 0; i--) {
+    var tbrow = document.createElement('tr');
+    tbrow.setAttribute('class', 'stats-row');
+
+    var td1 = document.createElement('td');
+    td1.textContent = stats[i].season;
+
+    var td2 = document.createElement('td');
+    td2.textContent = stats[i].team.name;
+
+    var td3 = document.createElement('td');
+    if (stats[i].league.name === 'National Hockey League') {
+      td3.textContent = 'NHL'
+    } else {
+      td3.textContent = stats[i].league.name;
+    }
+
+    var td4 = document.createElement('td');
+    td4.textContent = stats[i].stat.games;
+
+    var td5 = document.createElement('td');
+    td5.textContent = stats[i].stat.goals;
+
+    var td6 = document.createElement('td');
+    td6.textContent = stats[i].stat.assists;
+
+    var td7 = document.createElement('td');
+    td7.textContent = stats[i].stat.points;
+
+    var td8 = document.createElement('td');
+    td8.textContent = stats[i].stat.shots;
+
+    var td9 = document.createElement('td');
+    td9.textContent = stats[i].stat.shotPct;
+
+    var td10 = document.createElement('td');
+    td10.textContent = stats[i].stat.plusMinus;
+
+    var td11 = document.createElement('td');
+    td11.textContent = stats[i].stat.penaltyMinutes;
+
+    var td12 = document.createElement('td');
+    td12.textContent = stats[i].stat.shortHandedGoals;
+
+    var td13 = document.createElement('td');
+    td13.textContent = stats[i].stat.powerPlayGoals;
+
+    var td14 = document.createElement('td');
+    td14.textContent = stats[i].stat.gameWinningGoals;
+
+    var td15 = document.createElement('td');
+    td15.textContent = stats[i].stat.overTimeGoals;
+
+    var td16 = document.createElement('td');
+    td16.textContent = stats[i].stat.timeOnIce;
+
+    var td18 = document.createElement('td');
+    td18.textContent = stats[i].stat.faceOffPct;
+
+    var td19 = document.createElement('td');
+    td19.textContent = stats[i].stat.blocked;
+
+    var td20 = document.createElement('td');
+    td20.textContent = stats[i].stat.hits;
+
+    tbrow.appendChild(td1);
+    tbrow.appendChild(td2);
+    tbrow.appendChild(td3);
+    tbrow.appendChild(td4);
+    tbrow.appendChild(td5);
+    tbrow.appendChild(td6);
+    tbrow.appendChild(td7);
+    tbrow.appendChild(td8);
+    tbrow.appendChild(td9);
+    tbrow.appendChild(td10);
+    tbrow.appendChild(td11);
+    tbrow.appendChild(td12);
+    tbrow.appendChild(td13);
+    tbrow.appendChild(td14);
+    tbrow.appendChild(td15);
+    tbrow.appendChild(td16);
+    tbrow.appendChild(td18);
+    tbrow.appendChild(td19);
+    tbrow.appendChild(td20);
+    tbody.appendChild(tbrow)
+    }
+  }
+}
+
 
  /*    View Swapping      */
 

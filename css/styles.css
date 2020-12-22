@@ -1,9 +1,6 @@
 
-/*     Header      */
-
 header {
   background-color: black;
-  justify-content: space-between;
   align-items: center;
 }
 
@@ -11,10 +8,11 @@ h1 {
   font-family: 'Open Sans', sans-serif;
   color: white;
   margin-right: 2rem;
+  text-align: right;
 }
 
 .logo {
-  width: 8rem;
+  width: 14rem;
   cursor: pointer;
 }
 
@@ -23,51 +21,6 @@ h1 {
 }
 
 
-/*    Search Row     */
-
-.flex-column {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-}
-
-.space-between {
-  justify-content: center;
-}
-
-.row-height {
-  height: 8rem;
-  margin: 2rem 0;
-}
-
-.or {
-  text-align: center;
-  margin: 0;
-}
-
-.browse {
-  height: 2rem;
-  width: 75%;
-  margin-right: 1rem;
-}
-
-.submit-button {
-  background-color: black;
-  color: white;
-  width: 22%;
-  font-weight: 500;
-  cursor: pointer;
-}
-
-
-/*      Team Info      */
-
-.team-row-1 {
-  align-items: center;
-  justify-content: space-around;
-  margin-top: 2rem;
-}
-
 .bold {
   font-weight: bold;
 }
@@ -75,6 +28,7 @@ h1 {
 .team-info p {
   font-size: 0.9rem;
   margin: 0.2rem 0 0.2rem 1rem;
+  text-align: center;
 }
 
 h3 , .player-info,
@@ -103,10 +57,6 @@ tr :nth-child(1) {
   width: 20%;
 }
 
-.justify-left {
-  justify-content: left;
-}
-
 .suggestions div {
   padding: 0.3rem 1rem;
   background-color: #eeeeee;
@@ -120,6 +70,55 @@ tr :nth-child(1) {
 
 .player-row:hover {
   color: blue;
+}
+
+.stats-row {
+  text-align: center;
+}
+
+.stats-row td {
+  padding: 0.5rem 1rem;
+}
+
+.search {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+.search > div {
+  width: 100%;
+  max-width: 600px;
+}
+
+.view {
+  margin-top: 2.5rem;
+}
+
+.team-form ,
+.player-form,
+.search-space {
+  justify-content: space-around;
+}
+
+.team-form {
+  height: 30px;
+}
+
+.btn-dark {
+  font-size: 80%;
+}
+
+.btn-dark:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.flex-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .hidden {

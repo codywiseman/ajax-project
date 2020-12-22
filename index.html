@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AJAX Project</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+  <link rel="stylesheet" href="BS5/css/bootstrap.css">
   <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@1,600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/reset.css">
@@ -17,41 +17,32 @@
       <img src="Images/NHLlogo.png" alt="NHL Logo">
     </div>
     <div>
-      <h1>The Ice Report</h1>
+      <h1>Center Ice</h1>
     <div>
-  </header>
-  <div class="container">
-    <main>
-      <div class="view" data-view="home-page">
-        <div class="flex-column row-height">
-          <form class="row space-between team-form">
-            <select name="team-select"  class="browse" id="team-select">
+    </header>
+    <main class="container">
+      <div class="search">
+        <div>
+          <form class="team-form row">
+            <select name="team-select"  id="team-select" class="col-9">
               <option value="select-team" selected disabled>Select Team</option>
             </select>
-            <input type="submit" value='ENTER' class="submit-button">
+            <input type="submit" value='ENTER' class="submit-button col-2 btn-dark">
           </form>
-          <p class="or">OR</p>
-          <form class="row space-between player-form">
-            <input type="search" class="browse player-search" placeholder="Search for a Player">
-            <input type="submit" value='SEARCH' class="submit-button">
+          <p class="text-center my-2">OR</p>
+          <form class="row player-form">
+            <input type="search" class='player-search col-9' placeholder="Search for a Player">
+            <input type="submit" value='SEARCH' class="submit-button col-2 btn-dark">
           </form>
-          <div class="row space-between justify-left">
-            <div class="suggestions browse">
-            </div>
-            <div></div>
+          <div class="row search-space">
+            <div class="suggestions col-9"></div>
+            <div class="col-2"></div>
           </div>
         </div>
       </div>
       <div class="view hidden" data-view="team-page"></div>
-      <div class="view hidden" data-view="player-page">
-        <!--<h2 class="player-name">Ryan Getzlaf | #15</h2>
-        <h4 class="player-info">C &vert; 6'3" &vert; 228lb &vert; Age: 35 &vert; Anaheim Ducks</h4>
-        <p class="player-info"><span class="bold">Born:</span> 1995-04-22</p>
-        <p class="player-info"><span class="bold">Birthplace: </span> Seskatchewan</p>
-        <p class="player-info"><span class="bold">Shoots: </span>R</p>
-      </div> -->
+      <div class="view hidden" data-view="player-page"></div>
     </main>
-  </div>
   <script src="js/data.js"></script>
   <script src="js/main.js"></script>
 </body>
