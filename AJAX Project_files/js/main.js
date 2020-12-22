@@ -64,7 +64,6 @@ $teamForm.addEventListener('submit', function(e){
     renderRoster($teamSelectOptions[($teamSelect.selectedIndex - 1)].textContent);
     dataview('team-page');
     $teamForm.reset();
-    scroll(0,0);
   }
 })
 
@@ -75,30 +74,30 @@ var player;
 $playerForm.addEventListener('submit', function(e){
   e.preventDefault();
   var playerXhr = new XMLHttpRequest();
-  var statsXhr = new XMLHttpRequest();
-  var id = $playerSearch.value.toLowerCase();
+  var idName = $playerSearch.value.toLowerCase();
   for(var i = 0; i < playerIds.length; i++) {
-    if(playerIds[i].hasOwnProperty(id)) {
-      playerXhr.open('GET', 'https://statsapi.web.nhl.com/api/v1/people/' + (playerIds[i][id]).toString());
-      statsXhr.open('GET', ' https://statsapi.web.nhl.com/api/v1/people/' + (playerIds[i][id]).toString() + '/stats/?stats=yearByYear');
+    if(playerIds[i].hasOwnProperty(idName)) {
+      id = playerIds[i][idName]
+      playerXhr.open('GET', 'https://statsapi.web.nhl.com/api/v1/people/' + id.toString());
       playerXhr.responseType = 'json';
-      statsXhr.responseType = 'json';
       playerXhr.addEventListener('load', function (){
         player = playerXhr.response.people[0];
         $playerPageDiv.innerHTML = '';
         renderPlayerPage(player);
-      })
-      statsXhr.addEventListener('load', function () {
-        renderPlayerStats(statsXhr.response.stats[0].splits);
-        dataview('player-page');
-        $playerForm.reset();
-        scroll(0,0);
+        var statsXhr = new XMLHttpRequest();
+        statsXhr.open('GET', ' https://statsapi.web.nhl.com/api/v1/people/' + id.toString() + '/stats/?stats=yearByYear');
+        statsXhr.responseType = 'json';
+        statsXhr.addEventListener('load', function () {
+          renderPlayerStats(statsXhr.response.stats[0].splits);
+          dataview('player-page');
+          $playerForm.reset();
+        })
+        statsXhr.send();
       })
       i = playerIds.length;
     }
   }
   playerXhr.send();
-  statsXhr.send();
 })
 
 
@@ -135,30 +134,31 @@ $suggestion.addEventListener('click', function(e) {
 
 document.addEventListener('click', function (e) {
   if (data.view === 'team-page' && e.target.tagName === 'TD') {
-    var toPlayerPage = e.target.closest('.player-row').innerHTML.toLowerCase();
+    var idName = e.target.closest('.player-row').innerHTML.toLowerCase();
     var playerXhr = new XMLHttpRequest();
-    var statsXhr = new XMLHttpRequest();
     for (var i = 0; i < playerIds.length; i++) {
-      if (playerIds[i].hasOwnProperty(toPlayerPage)) {
-        playerXhr.open('GET', 'https://statsapi.web.nhl.com/api/v1/people/' + (playerIds[i][toPlayerPage]).toString());
-        statsXhr.open('GET', ' https://statsapi.web.nhl.com/api/v1/people/' + (playerIds[i][toPlayerPage]).toString() + '/stats/?stats=yearByYear');
+      if (playerIds[i].hasOwnProperty(idName)) {
+        var id = playerIds[i][idName];
+        playerXhr.open('GET', 'https://statsapi.web.nhl.com/api/v1/people/' + id.toString());
         playerXhr.responseType = 'json';
-        statsXhr.responseType = 'json';
         playerXhr.addEventListener('load', function () {
           player = playerXhr.response.people[0];
           $playerPageDiv.innerHTML = '';
           renderPlayerPage(player);
-        })
-        statsXhr.addEventListener('load', function () {
-          renderPlayerStats(statsXhr.response.stats[0].splits);
-          dataview('player-page');
-          scroll(0,0);
+          var statsXhr = new XMLHttpRequest();
+          statsXhr.open('GET', ' https://statsapi.web.nhl.com/api/v1/people/' + id.toString() + '/stats/?stats=yearByYear');
+          statsXhr.responseType = 'json';
+          statsXhr.addEventListener('load', function () {
+            renderPlayerStats(statsXhr.response.stats[0].splits);
+            dataview('player-page');
+            scroll(0, 0);
+          })
+          statsXhr.send();
         })
         i = playerIds.length;
       }
     }
     playerXhr.send();
-    statsXhr.send();
   }
 })
 

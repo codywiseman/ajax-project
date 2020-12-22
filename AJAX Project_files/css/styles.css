@@ -110,6 +110,11 @@ tr :nth-child(1) {
   font-size: 80%;
 }
 
+.btn-dark:focus {
+  outline: none;
+  box-shadow: none;
+}
+
 .flex-col {
   display: flex;
   flex-direction: column;
