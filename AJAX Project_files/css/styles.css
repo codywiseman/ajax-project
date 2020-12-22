@@ -80,16 +80,20 @@ tr :nth-child(1) {
   padding: 0.5rem 1rem;
 }
 
-[data-view='home-page'] {
+.search {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 5rem;
+  margin-top: 1rem;
 }
 
-[data-view='home-page'] > div {
+.search > div {
   width: 100%;
   max-width: 600px;
+}
+
+.view {
+  margin-top: 2.5rem;
 }
 
 .team-form ,

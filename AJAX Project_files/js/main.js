@@ -64,6 +64,7 @@ $teamForm.addEventListener('submit', function(e){
     renderRoster($teamSelectOptions[($teamSelect.selectedIndex - 1)].textContent);
     dataview('team-page');
     $teamForm.reset();
+    scroll(0,0);
   }
 })
 
@@ -86,12 +87,12 @@ $playerForm.addEventListener('submit', function(e){
         player = playerXhr.response.people[0];
         $playerPageDiv.innerHTML = '';
         renderPlayerPage(player);
-        dataview('player-page');
-        $playerForm.reset();
       })
       statsXhr.addEventListener('load', function () {
-        console.log(player)
         renderPlayerStats(statsXhr.response.stats[0].splits);
+        dataview('player-page');
+        $playerForm.reset();
+        scroll(0,0);
       })
       i = playerIds.length;
     }
@@ -147,10 +148,11 @@ document.addEventListener('click', function (e) {
           player = playerXhr.response.people[0];
           $playerPageDiv.innerHTML = '';
           renderPlayerPage(player);
-          dataview('player-page');
         })
         statsXhr.addEventListener('load', function () {
           renderPlayerStats(statsXhr.response.stats[0].splits);
+          dataview('player-page');
+          scroll(0,0);
         })
         i = playerIds.length;
       }
