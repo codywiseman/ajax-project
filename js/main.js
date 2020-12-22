@@ -8,6 +8,7 @@ var $playerPageDiv = document.querySelector('div[data-view="player-page');
 var $playerForm = document.querySelector('.player-form');
 var $playerSearch = document.querySelector('.player-search');
 var $suggestion = document.querySelector('.suggestions');
+var $rosterTable = document.querySelector('.roster-table');
 
 
 /*      Teams Request     */
@@ -73,29 +74,30 @@ var player;
 $playerForm.addEventListener('submit', function(e){
   e.preventDefault();
   var playerXhr = new XMLHttpRequest();
-  var statsXhr = new XMLHttpRequest();
-  var id = $playerSearch.value.toLowerCase();
+  var idName = $playerSearch.value.toLowerCase();
   for(var i = 0; i < playerIds.length; i++) {
-    if(playerIds[i].hasOwnProperty(id)) {
-      playerXhr.open('GET', 'https://statsapi.web.nhl.com/api/v1/people/' + (playerIds[i][id]).toString());
-      statsXhr.open('GET', ' https://statsapi.web.nhl.com/api/v1/people/' + (playerIds[i][id]).toString() + '/stats/?stats=yearByYear');
+    if(playerIds[i].hasOwnProperty(idName)) {
+      id = playerIds[i][idName]
+      playerXhr.open('GET', 'https://statsapi.web.nhl.com/api/v1/people/' + id.toString());
       playerXhr.responseType = 'json';
-      statsXhr.responseType = 'json';
       playerXhr.addEventListener('load', function (){
         player = playerXhr.response.people[0];
         $playerPageDiv.innerHTML = '';
         renderPlayerPage(player);
-        dataview('player-page');
-        $playerForm.reset(player);
+        var statsXhr = new XMLHttpRequest();
+        statsXhr.open('GET', ' https://statsapi.web.nhl.com/api/v1/people/' + id.toString() + '/stats/?stats=yearByYear');
+        statsXhr.responseType = 'json';
+        statsXhr.addEventListener('load', function () {
+          renderPlayerStats(statsXhr.response.stats[0].splits);
+          dataview('player-page');
+          $playerForm.reset();
+        })
+        statsXhr.send();
       })
-      statsXhr.addEventListener('load', function () {
-        var playerStats = statsXhr.response.stats[0].splits;
-        renderPlayerStats(playerStats);
-      })
+      i = playerIds.length;
     }
   }
   playerXhr.send();
-  statsXhr.send();
 })
 
 
@@ -132,29 +134,31 @@ $suggestion.addEventListener('click', function(e) {
 
 document.addEventListener('click', function (e) {
   if (data.view === 'team-page' && e.target.tagName === 'TD') {
-    var toPlayerPage = e.target.closest('.player-row').innerHTML.toLowerCase();
+    var idName = e.target.closest('.player-row').innerHTML.toLowerCase();
     var playerXhr = new XMLHttpRequest();
-    var statsXhr = new XMLHttpRequest();
     for (var i = 0; i < playerIds.length; i++) {
-      if (playerIds[i].hasOwnProperty(toPlayerPage)) {
-        playerXhr.open('GET', 'https://statsapi.web.nhl.com/api/v1/people/' + (playerIds[i][toPlayerPage]).toString());
-        statsXhr.open('GET', ' https://statsapi.web.nhl.com/api/v1/people/' + (playerIds[i][toPlayerPage]).toString() + '/stats/?stats=yearByYear');
+      if (playerIds[i].hasOwnProperty(idName)) {
+        var id = playerIds[i][idName];
+        playerXhr.open('GET', 'https://statsapi.web.nhl.com/api/v1/people/' + id.toString());
         playerXhr.responseType = 'json';
-        statsXhr.responseType = 'json';
         playerXhr.addEventListener('load', function () {
-          var player = playerXhr.response.people[0];
+          player = playerXhr.response.people[0];
           $playerPageDiv.innerHTML = '';
           renderPlayerPage(player);
-          dataview('player-page');
+          var statsXhr = new XMLHttpRequest();
+          statsXhr.open('GET', ' https://statsapi.web.nhl.com/api/v1/people/' + id.toString() + '/stats/?stats=yearByYear');
+          statsXhr.responseType = 'json';
+          statsXhr.addEventListener('load', function () {
+            renderPlayerStats(statsXhr.response.stats[0].splits);
+            dataview('player-page');
+            scroll(0, 0);
+          })
+          statsXhr.send();
         })
-        statsXhr.addEventListener('load', function () {
-          var playerStats = statsXhr.response.stats[0].splits;
-          renderPlayerStats(playerStats);
-        })
+        i = playerIds.length;
       }
     }
     playerXhr.send();
-    statsXhr.send();
   }
 })
 
@@ -199,7 +203,7 @@ function renderTeamPage(team) {
   for (var i = 0; i < teamsList.length; i++) {
     if (teamsList[i].name === team) {
       var divOne = document.createElement('div');
-      divOne.setAttribute('class', 'row team-row-1');
+      divOne.setAttribute('class', 'flex-col my-2');
 
       var teamLogo = document.createElement('img');
       teamLogo.setAttribute('src', teamLogoImages[team])
@@ -369,7 +373,7 @@ function renderPlayerStats(stats) {
   statsTitle.textContent = 'Statistics';
 
   var tableDiv = document.createElement('div');
-  tableDiv.setAttribute('class', 'stats-table-div');
+  tableDiv.setAttribute('class', 'stats-table-div table-responsive');
 
   var table  = document.createElement('table');
   table.setAttribute('class', 'stats-table');
