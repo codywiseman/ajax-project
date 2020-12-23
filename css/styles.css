@@ -148,6 +148,10 @@ tr :nth-child(1) {
   font-size: 70%;
 }
 
+.btn {
+  min-width: 70px;;
+}
+
 
 h5 {
   text-align: center;
