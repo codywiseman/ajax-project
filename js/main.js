@@ -735,13 +735,13 @@ function renderFavorites (players) {
   th3.textContent = 'GP';
 
   var th4 = document.createElement('th');
-  th4.textContent = 'Goals';
+  th4.textContent = 'G';
 
   var th5 = document.createElement('th');
-  th5.textContent = 'Assists';
+  th5.textContent = 'A';
 
   var th6 = document.createElement('th');
-  th6.textContent = 'Points';
+  th6.textContent = 'PTS';
 
   var th7 = document.createElement('th');
   th7.textContent = '+/-';
