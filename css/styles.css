@@ -136,7 +136,7 @@ tr :nth-child(1) {
   background-color: silver;
 }
 
-.btn:active,
+.btn:hover,
 .btn:focus:active {
   color: black;
   background-color: white;
