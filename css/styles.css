@@ -121,6 +121,18 @@ tr :nth-child(1) {
   align-items: center;
 }
 
+.fa-star {
+  cursor: pointer;
+}
+
+.far {
+  color: #DEDEDE;
+}
+
+.fas {
+  color: gold;
+}
+
 .hidden {
   display: none;
 }

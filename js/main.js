@@ -11,6 +11,7 @@ var $suggestion = document.querySelector('.suggestions');
 var $rosterTable = document.querySelector('.roster-table');
 
 
+
 /*      Teams Request     */
 
 var teamsList;
@@ -161,6 +162,18 @@ document.addEventListener('click', function (e) {
     playerXhr.send();
   }
 })
+
+/*     Favorite Player listener   */
+
+$playerPageDiv.addEventListener('click', function (e) {
+  var $star =document.getElementById('favorite');
+  if (e.target === $star && $star.className ==='far fa-star') {
+    $star.className = 'fas fa-star'
+  } else {
+    $star.className = 'far fa-star'
+  }
+})
+
 
 
 /*     Render Team Page     */
@@ -326,6 +339,11 @@ function renderPlayerPage(person) {
   var nameHeading = document.createElement('h2');
   nameHeading.setAttribute('class', 'player-name');
   nameHeading.textContent = person.fullName;
+
+  var star = document.createElement('i');
+  star.setAttribute('class', 'far fa-star');
+  star.setAttribute('id', 'favorite');
+  nameHeading.prepend(star);
 
   var infoHeading = document.createElement('h4');
   infoHeading.setAttribute('class', 'player-info');
@@ -647,7 +665,6 @@ function renderPlayerStats(stats) {
     }
   }
 }
-
 
  /*    View Swapping      */
 
