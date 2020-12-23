@@ -43,6 +43,10 @@ h3 , .player-info,
   margin: 0.5rem auto;
 }
 
+.center-table {
+  margin: auto;
+}
+
 tbody tr:nth-child(odd) {
   background-color: #eeeeee;
 }
@@ -110,6 +114,7 @@ tr :nth-child(1) {
   font-size: 80%;
 }
 
+.btn-fav:focus,
 .btn-dark:focus {
   outline: none;
   box-shadow: none;
@@ -131,6 +136,15 @@ tr :nth-child(1) {
 
 .fas {
   color: gold;
+}
+
+.btn-fav {
+  background-color: silver;
+}
+
+.btn-fav-div {
+  display: flex;
+  justify-content: center;
 }
 
 .hidden {

@@ -24,16 +24,19 @@
     <main class="container">
       <div class="search">
         <div>
+          <div class="btn-fav-div">
+            <button type="button" class="btn btn-fav col-11 mb-3"> View Tracked Players</button>
+          </div>
           <form class="team-form row">
             <select name="team-select"  id="team-select" class="col-9">
               <option value="select-team" selected disabled>Select Team</option>
             </select>
-            <input type="submit" value='ENTER' class="submit-button col-2 btn-dark">
+            <input type="submit" value='ENTER' class="col-2 btn-dark">
           </form>
           <p class="text-center my-2">OR</p>
           <form class="row player-form">
             <input type="search" class='player-search col-9' placeholder="Search for a Player">
-            <input type="submit" value='SEARCH' class="submit-button col-2 btn-dark">
+            <input type="submit" value='SEARCH' class="col-2 btn-dark">
           </form>
           <div class="row search-space">
             <div class="suggestions col-9"></div>
@@ -43,6 +46,7 @@
       </div>
       <div class="view hidden" data-view="team-page"></div>
       <div class="view hidden" data-view="player-page"></div>
+      <div class="view hidden" data-view="favorite-page"></div>
     </main>
   <script src="js/data.js"></script>
   <script src="js/main.js"></script>
