@@ -147,6 +147,10 @@ tr :nth-child(1) {
   justify-content: center;
 }
 
+h5 {
+  text-align: center;
+}
+
 .hidden {
   display: none;
 }

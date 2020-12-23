@@ -711,6 +711,12 @@ function renderPlayerStats(stats) {
 // Render favorite players from storage on favorites page
 
 function renderFavorites (players) {
+  if (savedPlayer[0] === undefined) {
+    var tableLabelNone = document.createElement('h5');
+    tableLabelNone.textContent = 'Currently No Players Being Tracked';
+    $favoritePage.appendChild(tableLabelNone);
+    return;
+  }
   var tableLabel = document.createElement('h5');
   tableLabel.textContent = 'Tracked Players (Current Season Stats)'
 
