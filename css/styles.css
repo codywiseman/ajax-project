@@ -132,7 +132,8 @@ tr :nth-child(1) {
   background-color: silver;
 }
 
-.btn:hover{
+.btn:active,
+.btn:focus:active {
   color: black;
   background-color: white;
   border-color: black;
@@ -144,7 +145,7 @@ tr :nth-child(1) {
 }
 
 .btn-dark {
-  font-size: 80%;
+  font-size: 70%;
 }
 
 
