@@ -110,16 +110,6 @@ tr :nth-child(1) {
   height: 30px;
 }
 
-.btn-dark {
-  font-size: 80%;
-}
-
-.btn-fav:focus,
-.btn-dark:focus {
-  outline: none;
-  box-shadow: none;
-}
-
 .flex-col {
   display: flex;
   flex-direction: column;
@@ -142,10 +132,21 @@ tr :nth-child(1) {
   background-color: silver;
 }
 
+.btn:hover{
+  color: black;
+  background-color: white;
+  border-color: black;
+}
+
 .btn-fav-div {
   display: flex;
   justify-content: center;
 }
+
+.btn-dark {
+  font-size: 80%;
+}
+
 
 h5 {
   text-align: center;
