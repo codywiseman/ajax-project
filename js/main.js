@@ -9,16 +9,20 @@ var $playerForm = document.querySelector('.player-form');
 var $playerSearch = document.querySelector('.player-search');
 var $suggestion = document.querySelector('.suggestions');
 var $rosterTable = document.querySelector('.roster-table');
-
+var $star = null;
 
 
 /*      Teams Request     */
 
-var teamsList;
+var teamsList = null;
 
 var playerIds = [];
 
 var playerNames = []
+
+var player = null;
+
+var thisSeasonStats = null;
 
 var teamsXhr = new XMLHttpRequest();
 teamsXhr.open('GET', 'https://statsapi.web.nhl.com/api/v1/teams?expand=team.roster');
@@ -70,8 +74,6 @@ $teamForm.addEventListener('submit', function(e){
 
 /*      Submit Listener for Player page      */
 
-var player;
-
 $playerForm.addEventListener('submit', function(e){
   e.preventDefault();
   var playerXhr = new XMLHttpRequest();
@@ -89,7 +91,15 @@ $playerForm.addEventListener('submit', function(e){
         statsXhr.open('GET', ' https://statsapi.web.nhl.com/api/v1/people/' + id.toString() + '/stats/?stats=yearByYear');
         statsXhr.responseType = 'json';
         statsXhr.addEventListener('load', function () {
-          renderPlayerStats(statsXhr.response.stats[0].splits);
+          allStats = statsXhr.response.stats[0].splits;
+          thisSeasonStats = allStats[allStats.length - 1]
+          renderPlayerStats(allStats);
+          $star = document.getElementById('favorite');
+          for (var x = 0; x < savedPlayer.length; x++) {
+            if (savedPlayer[x].player === player.fullName.toLocaleLowerCase()) {
+              $star.className = 'fas fa-star';
+            }
+          }
           dataview('player-page');
           $playerForm.reset();
         })
@@ -150,7 +160,15 @@ document.addEventListener('click', function (e) {
           statsXhr.open('GET', ' https://statsapi.web.nhl.com/api/v1/people/' + id.toString() + '/stats/?stats=yearByYear');
           statsXhr.responseType = 'json';
           statsXhr.addEventListener('load', function () {
-            renderPlayerStats(statsXhr.response.stats[0].splits);
+            allStats = statsXhr.response.stats[0].splits;
+            thisSeasonStats = allStats[allStats.length - 1]
+            renderPlayerStats(allStats);
+            $star = document.getElementById('favorite');
+            for (var x = 0; x < savedPlayer.length; x++) {
+              if (savedPlayer[x].player === player.fullName.toLocaleLowerCase()) {
+                $star.className = 'fas fa-star';
+              }
+            }
             dataview('player-page');
             scroll(0, 0);
           })
@@ -166,11 +184,20 @@ document.addEventListener('click', function (e) {
 /*     Favorite Player listener   */
 
 $playerPageDiv.addEventListener('click', function (e) {
-  var $star =document.getElementById('favorite');
+  $star = document.getElementById('favorite');
   if (e.target === $star && $star.className ==='far fa-star') {
-    $star.className = 'fas fa-star'
+    $star.className = 'fas fa-star';
+    var playerSaveObj = {};
+    playerSaveObj['player'] = player.fullName.toLocaleLowerCase();
+    playerSaveObj['seasonStats'] = thisSeasonStats;
+    savedPlayer.push(playerSaveObj);
   } else {
-    $star.className = 'far fa-star'
+    for (var i = 0; i < savedPlayer.length; i++){
+      if (savedPlayer[i].player === player.fullName.toLowerCase()) {
+        savedPlayer.splice(i , 1);
+      }
+      $star.className = 'far fa-star';
+    }
   }
 })
 
