@@ -9,15 +9,33 @@ var $playerForm = document.querySelector('.player-form');
 var $playerSearch = document.querySelector('.player-search');
 var $suggestion = document.querySelector('.suggestions');
 var $rosterTable = document.querySelector('.roster-table');
+var $favoritePage = document.querySelector('div[data-view="favorite-page');
+var $btnFav = document.querySelector('.btn-fav');
+var $star = null;
 
 
-/*      Teams Request     */
-
-var teamsList;
+var teamsList = null;
 
 var playerIds = [];
 
 var playerNames = []
+
+var player = null;
+
+var thisSeasonStats = null;
+
+
+// Click NHL logo to clear page content
+
+$homeLogo.addEventListener('click', function () {
+  $teamForm.reset();
+  $playerForm.reset();
+  $suggestion.innerHTML = '';
+  dataview('home-page');
+})
+
+
+// Request for Teams
 
 var teamsXhr = new XMLHttpRequest();
 teamsXhr.open('GET', 'https://statsapi.web.nhl.com/api/v1/teams?expand=team.roster');
@@ -45,16 +63,8 @@ teamsXhr.addEventListener('load', function() {
 })
 teamsXhr.send();
 
-/*      Go to Home Page     */
 
-$homeLogo.addEventListener('click', function(){
-  $teamForm.reset();
-  $playerForm.reset();
-  $suggestion.innerHTML = '';
-  dataview('home-page');
-})
-
-/*      Submit Listener for Team page      */
+//Select team and submit to be take to team page
 
 $teamForm.addEventListener('submit', function(e){
   e.preventDefault();
@@ -67,9 +77,7 @@ $teamForm.addEventListener('submit', function(e){
   }
 })
 
-/*      Submit Listener for Player page      */
-
-var player;
+// Enter player name and submit to be taken to player page
 
 $playerForm.addEventListener('submit', function(e){
   e.preventDefault();
@@ -88,7 +96,15 @@ $playerForm.addEventListener('submit', function(e){
         statsXhr.open('GET', ' https://statsapi.web.nhl.com/api/v1/people/' + id.toString() + '/stats/?stats=yearByYear');
         statsXhr.responseType = 'json';
         statsXhr.addEventListener('load', function () {
-          renderPlayerStats(statsXhr.response.stats[0].splits);
+          allStats = statsXhr.response.stats[0].splits;
+          thisSeasonStats = allStats[allStats.length - 1]
+          renderPlayerStats(allStats);
+          $star = document.getElementById('favorite');
+          for (var x = 0; x < savedPlayer.length; x++) {
+            if (savedPlayer[x].player === player.fullName) {
+              $star.className = 'fas fa-star';
+            }
+          }
           dataview('player-page');
           $playerForm.reset();
         })
@@ -101,7 +117,7 @@ $playerForm.addEventListener('submit', function(e){
 })
 
 
-/*       Player seach bar suggestions        */
+// Player seach bar suggestions
 
 $playerSearch.addEventListener('keyup', function(){
   var input = $playerSearch.value;
@@ -130,7 +146,7 @@ $suggestion.addEventListener('click', function(e) {
   $suggestion.innerHTML = '';
 })
 
-/*      Click on player on roster to be take to player page       */
+// Click on player on roster table to be taken to player page
 
 document.addEventListener('click', function (e) {
   if (data.view === 'team-page' && e.target.tagName === 'TD') {
@@ -149,7 +165,15 @@ document.addEventListener('click', function (e) {
           statsXhr.open('GET', ' https://statsapi.web.nhl.com/api/v1/people/' + id.toString() + '/stats/?stats=yearByYear');
           statsXhr.responseType = 'json';
           statsXhr.addEventListener('load', function () {
-            renderPlayerStats(statsXhr.response.stats[0].splits);
+            allStats = statsXhr.response.stats[0].splits;
+            thisSeasonStats = allStats[allStats.length - 1]
+            renderPlayerStats(allStats);
+            $star = document.getElementById('favorite');
+            for (var x = 0; x < savedPlayer.length; x++) {
+              if (savedPlayer[x].player === player.fullName) {
+                $star.className = 'fas fa-star';
+              }
+            }
             dataview('player-page');
             scroll(0, 0);
           })
@@ -162,8 +186,35 @@ document.addEventListener('click', function (e) {
   }
 })
 
+// Click on star to favorite player / unfavorite player
 
-/*     Render Team Page     */
+$playerPageDiv.addEventListener('click', function (e) {
+  $star = document.getElementById('favorite');
+  if (e.target === $star && $star.className ==='far fa-star') {
+    $star.className = 'fas fa-star';
+    var playerSaveObj = {};
+    playerSaveObj['player'] = player.fullName;
+    playerSaveObj['seasonStats'] = thisSeasonStats;
+    savedPlayer.push(playerSaveObj);
+  } else {
+    for (var i = 0; i < savedPlayer.length; i++){
+      if (savedPlayer[i].player === player.fullName) {
+        savedPlayer.splice(i , 1);
+      }
+      $star.className = 'far fa-star';
+    }
+  }
+})
+
+// Click on view tracked players
+
+$btnFav.addEventListener('click', function() {
+  $favoritePage.innerHTML = '';
+  renderFavorites(savedPlayer);
+  dataview('favorite-page');
+});
+
+//Render team info on team page
 
 var teamLogoImages = {
   'New Jersey Devils': 'images/devils.png',
@@ -259,6 +310,8 @@ function renderTeamPage(team) {
   }
 }
 
+// Render roster on team page
+
 function renderRoster(team) {
   for(var i = 0; i < teamsList.length; i++) {
     if(teamsList[i].name === team) {
@@ -320,12 +373,17 @@ function renderRoster(team) {
   }
 }
 
-/*     Render Player Page     */
+// Render player info on player page
 
 function renderPlayerPage(person) {
   var nameHeading = document.createElement('h2');
   nameHeading.setAttribute('class', 'player-name');
   nameHeading.textContent = person.fullName;
+
+  var star = document.createElement('i');
+  star.setAttribute('class', 'far fa-star');
+  star.setAttribute('id', 'favorite');
+  nameHeading.prepend(star);
 
   var infoHeading = document.createElement('h4');
   infoHeading.setAttribute('class', 'player-info');
@@ -367,6 +425,8 @@ function renderPlayerPage(person) {
   $playerPageDiv.appendChild(pTwo);
   $playerPageDiv.appendChild(pThree);
 }
+
+//Render player stats on player page
 
 function renderPlayerStats(stats) {
   var statsTitle = document.createElement('h4');
@@ -648,8 +708,115 @@ function renderPlayerStats(stats) {
   }
 }
 
+// Render favorite players from storage on favorites page
 
- /*    View Swapping      */
+function renderFavorites (players) {
+  var tableLabel = document.createElement('h5');
+  tableLabel.textContent = 'Tracked Players (Current Season Stats)'
+
+  var tableDiv = document.createElement('div');
+  tableDiv.setAttribute('class', 'stats-table-div table-responsive');
+
+  var table = document.createElement('table');
+  table.setAttribute('class', 'stats-table center-table');
+
+  var thead = document.createElement('thead');
+
+  var tHeadRow = document.createElement('tr');
+  tHeadRow.setAttribute('class', 'stats-row');
+
+  var th1 = document.createElement('th');
+  th1.textContent = 'Player';
+
+  var th2 = document.createElement('th');
+  th2.textContent = 'Team';
+
+  var th3 = document.createElement('th');
+  th3.textContent = 'GP';
+
+  var th4 = document.createElement('th');
+  th4.textContent = 'G';
+
+  var th5 = document.createElement('th');
+  th5.textContent = 'A';
+
+  var th6 = document.createElement('th');
+  th6.textContent = 'PTS';
+
+  var th7 = document.createElement('th');
+  th7.textContent = '+/-';
+
+  var tBody = document.createElement('tbody')
+
+  $favoritePage.appendChild(tableLabel);
+  $favoritePage.appendChild(tableDiv);
+  tableDiv.appendChild(table);
+  table.appendChild(thead);
+  thead.appendChild(tHeadRow);
+  tHeadRow.appendChild(th1);
+  tHeadRow.appendChild(th2);
+  tHeadRow.appendChild(th3);
+  tHeadRow.appendChild(th4);
+  tHeadRow.appendChild(th5);
+  tHeadRow.appendChild(th6);
+  tHeadRow.appendChild(th7);
+  table.appendChild(tBody);
+
+  for(var i = 0; i < savedPlayer.length; i++) {
+    var tableRow = document.createElement('tr');
+    tableRow.setAttribute('class', 'stats-row');
+
+    var td1 = document.createElement('td');
+    td1.textContent = players[i].player;
+
+    var td2 = document.createElement('td');
+    td2.textContent = players[i].seasonStats.team.name;
+
+    var td3 = document.createElement('td');
+    td3.textContent = players[i].seasonStats.stat.games;
+
+    var td4 = document.createElement('td');
+    td4.textContent = players[i].seasonStats.stat.goals;
+
+    var td5 = document.createElement('td');
+    td5.textContent = players[i].seasonStats.stat.assists;
+
+    var td6 = document.createElement('td');
+    td6.textContent = players[i].seasonStats.stat.points;
+
+    var td7 = document.createElement('td');
+    td7.textContent = players[i].seasonStats.stat.plusMinus;
+
+    tableRow.appendChild(td1);
+    tableRow.appendChild(td2);
+    tableRow.appendChild(td3);
+    tableRow.appendChild(td4);
+    tableRow.appendChild(td5);
+    tableRow.appendChild(td6);
+    tableRow.appendChild(td7);
+    tBody.appendChild(tableRow);
+  }
+}
+
+/*<div class="view " data-view="favorite-page">
+  <h3>Tracked Players</h3>
+  <div class="stats-table-div table-responsive">
+    <table class="stats-table center-table">
+      <tbody>
+        <tr class="stats-row">
+          <td>Ryan Getzlaf</td>
+          <td>Anaheim Ducks</td>
+          <td>60</td>
+          <td>22</td>
+          <td>40</td>
+          <td>62</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>*/
+
+ // View Swapping
 
 function dataview(viewName) {
   for(var i = 0; i < $viewClasses.length; i++) {
