@@ -25,6 +25,10 @@ h1 {
   font-weight: bold;
 }
 
+ input[type=search] {
+    -webkit-appearance: textfield;
+}​​​;
+
 .team-info p {
   font-size: 0.9rem;
   margin: 0.2rem 0 0.2rem 1rem;

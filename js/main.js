@@ -119,7 +119,7 @@ $playerForm.addEventListener('submit', function(e){
 
 // Player seach bar suggestions
 
-$playerSearch.addEventListener('keydown', function(){
+$playerSearch.addEventListener('input', function(){
   var input = $playerSearch.value;
   $suggestion.innerHTML = '';
   var suggestions = playerNames.filter(function(player) {
