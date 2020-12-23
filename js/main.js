@@ -804,24 +804,6 @@ function renderFavorites (players) {
   }
 }
 
-/*<div class="view " data-view="favorite-page">
-  <h3>Tracked Players</h3>
-  <div class="stats-table-div table-responsive">
-    <table class="stats-table center-table">
-      <tbody>
-        <tr class="stats-row">
-          <td>Ryan Getzlaf</td>
-          <td>Anaheim Ducks</td>
-          <td>60</td>
-          <td>22</td>
-          <td>40</td>
-          <td>62</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</div>*/
-
  // View Swapping
 
 function dataview(viewName) {
