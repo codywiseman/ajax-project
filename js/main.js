@@ -127,14 +127,11 @@ document.addEventListener('click', function() {
 
 // Player seach bar suggestions
 
-$playerSearch.addEventListener('keyup', playerSuggestions);
-
-$playerSearch.addEventListener('touchstart', function(){
-  console.log('hi')
+$playerSearch.addEventListener('keyup', function(){
+  console.log('key');
 });
 
 function playerSuggestions() {
-  debugger;
   var input = $playerSearch.value;
   $suggestion.innerHTML = '';
   var suggestions = playerNames.filter(function(player) {
