@@ -127,9 +127,7 @@ document.addEventListener('click', function() {
 
 // Player seach bar suggestions
 
-$playerSearch.addEventListener('keyup', function(){
-  console.log('key');
-});
+$playerSearch.addEventListener('keyup',playerSuggestions);
 
 function playerSuggestions() {
   var input = $playerSearch.value;
