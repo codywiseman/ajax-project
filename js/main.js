@@ -119,7 +119,12 @@ $playerForm.addEventListener('submit', function(e){
 
 // Player seach bar suggestions
 
-$playerSearch.addEventListener('input', function(){
+$playerSearch.addEventListener('keyup', playerStats);
+
+$playerSearch.addEventListener('touchend', playerStats);
+
+function playerStats() {
+  debugger;
   var input = $playerSearch.value;
   $suggestion.innerHTML = '';
   var suggestions = playerNames.filter(function(player) {
@@ -139,7 +144,7 @@ $playerSearch.addEventListener('input', function(){
   if (input === '') {
     $suggestion.innerHTML = ''
   }
-})
+}
 
 $suggestion.addEventListener('click', function(e) {
   $playerSearch.value = e.target.innerHTML;
