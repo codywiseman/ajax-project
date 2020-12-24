@@ -137,11 +137,11 @@ function playerSuggestions() {
     return player.name.toLowerCase().startsWith(input);
   })
   var condensedSuggestions = [];
-  console.log(condensedSuggestions)
   for (var i = 0; i < 6; i++){
     if(suggestions[i] !== undefined) {
       condensedSuggestions.push(suggestions[i]);
     }
+    console.log(condensedSuggestions)
   }
   condensedSuggestions.forEach(function(suggested) {
     var div = document.createElement('div');
