@@ -133,11 +133,13 @@ $playerSearch.addEventListener('keyup', function(){
 
 function playerSuggestions() {
   var input = $playerSearch.value;
+  console.log(input)
   $suggestion.innerHTML = '';
   var suggestions = playerNames.filter(function(player) {
     return player.name.toLowerCase().startsWith(input);
   })
   var condensedSuggestions = [];
+  console.log(condensedSuggestions)
   for (var i = 0; i < 6; i++){
     if(suggestions[i] !== undefined) {
       condensedSuggestions.push(suggestions[i]);
