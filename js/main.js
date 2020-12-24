@@ -108,7 +108,6 @@ $playerForm.addEventListener('submit', function(e){
           }
           dataview('player-page');
           $playerForm.reset();
-          $searchBox.className = 'player-search col-9'
         })
         statsXhr.send();
       })
@@ -116,9 +115,13 @@ $playerForm.addEventListener('submit', function(e){
       playerXhr.send();
     }
     else{
-      $searchBox.className = 'player-search col-9 red'
+      $searchBox.className = 'player-search col-9 red';
     }
   }
+})
+
+document.addEventListener('click', function() {
+  $searchBox.className = 'player-search col-9';
 })
 
 
