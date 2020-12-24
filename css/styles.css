@@ -165,6 +165,10 @@ h5 {
   padding-left: 0.2rem;
 }
 
+.red {
+  border-color: red;
+}
+
 .hidden {
   display: none;
 }

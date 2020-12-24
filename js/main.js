@@ -11,6 +11,7 @@ var $suggestion = document.querySelector('.suggestions');
 var $rosterTable = document.querySelector('.roster-table');
 var $favoritePage = document.querySelector('div[data-view="favorite-page');
 var $btnFav = document.querySelector('.btn-fav');
+var $searchBox = document.getElementById('search-box')
 var $star = null;
 
 
@@ -107,16 +108,17 @@ $playerForm.addEventListener('submit', function(e){
           }
           dataview('player-page');
           $playerForm.reset();
+          $searchBox.className = 'player-search col-9'
         })
         statsXhr.send();
       })
       i = playerIds.length;
+      playerXhr.send();
+    }
+    else{
+      $searchBox.className = 'player-search col-9 red'
     }
   }
-  playerXhr.send();
-  playerXhr.addEventListener('error', function() {
-    console.log('carrot')
-  })
 })
 
 
