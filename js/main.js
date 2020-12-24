@@ -114,6 +114,9 @@ $playerForm.addEventListener('submit', function(e){
     }
   }
   playerXhr.send();
+  playerXhr.addEventListener('error', function() {
+    console.log('carrot')
+  })
 })
 
 
@@ -121,10 +124,9 @@ $playerForm.addEventListener('submit', function(e){
 
 $playerSearch.addEventListener('keyup', playerStats);
 
-$playerSearch.addEventListener('touchend', playerStats);
+$playerSearch.addEventListener('touchstart', playerStats);
 
 function playerStats() {
-  debugger;
   var input = $playerSearch.value;
   $suggestion.innerHTML = '';
   var suggestions = playerNames.filter(function(player) {
