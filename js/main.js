@@ -136,12 +136,13 @@ function playerSuggestions() {
   var suggestions = playerNames.filter(function(player) {
     return player.name.toLowerCase().startsWith(input);
   })
+  console.log('suggestions:', suggestions);
   var condensedSuggestions = [];
   for (var i = 0; i < 6; i++){
     if(suggestions[i] !== undefined) {
       condensedSuggestions.push(suggestions[i]);
     }
-    console.log(condensedSuggestions)
+    console.log('condensed suggestions:', condensedSuggestions)
   }
   condensedSuggestions.forEach(function(suggested) {
     var div = document.createElement('div');
