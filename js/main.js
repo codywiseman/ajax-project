@@ -114,14 +114,7 @@ $playerForm.addEventListener('submit', function(e){
       i = playerIds.length;
       playerXhr.send();
     }
-    else{
-      $searchBox.className = 'player-search col-9 red';
-    }
   }
-})
-
-document.addEventListener('click', function() {
-  $searchBox.className = 'player-search col-9';
 })
 
 
