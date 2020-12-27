@@ -135,7 +135,6 @@ function playerSuggestions() {
   var startsWith = [];
   debugger;
   playerNames.forEach(function(player) {
-    console.log(player.name.toLowerCase().startsWith(input.toLowerCase()));
     if(player.name.toLowerCase().startsWith(input.toLowerCase())) {
       startsWith.push(player.name);
     }
@@ -145,7 +144,6 @@ function playerSuggestions() {
     if(startsWith[i] !== undefined) {
       condensedSuggestions.push(startsWith[i]);
     }
-    console.log('condensed' ,condensedSuggestions);
   }
   condensedSuggestions.forEach(function(suggested) {
     var div = document.createElement('div');
