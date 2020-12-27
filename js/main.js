@@ -133,7 +133,6 @@ function playerSuggestions() {
   var input = $playerSearch.value;
   $suggestion.innerHTML = '';
   var startsWith = [];
-  debugger;
   playerNames.forEach(function(player) {
     if(player.name.toLowerCase().startsWith(input.toLowerCase())) {
       startsWith.push(player.name);
