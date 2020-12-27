@@ -135,9 +135,9 @@ function playerSuggestions() {
   $suggestion.innerHTML = '';
   debugger;
   var suggestions = playerNames.filter(function(player) {
+    console.log('suggestions:', suggestions);
     return player.name.toLowerCase().startsWith(input);
   })
-  console.log('suggestions:', suggestions);
   var condensedSuggestions = [];
   for (var i = 0; i < 6; i++){
     if(suggestions[i] !== undefined) {
