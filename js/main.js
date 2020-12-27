@@ -131,18 +131,23 @@ $playerSearch.addEventListener('keyup',playerSuggestions);
 
 function playerSuggestions() {
   var input = $playerSearch.value;
-  console.log(input)
   $suggestion.innerHTML = '';
-  var suggestions = playerNames.filter(player => player.name.toLowerCase().startsWith(input));
+  var startsWith = [];
+  playerNames.forEach(function(player) {
+    if(player.name.toLowerCase().startsWith(input)) {
+      startsWith.push(player.name);
+    }
+  });
   var condensedSuggestions = [];
   for (var i = 0; i < 6; i++){
-    if(suggestions[i] !== undefined) {
-      condensedSuggestions.push(suggestions[i]);
+    if(startsWith[i] !== undefined) {
+      condensedSuggestions.push(startsWith[i]);
     }
+    console.log('condensed' ,condensedSuggestions);
   }
   condensedSuggestions.forEach(function(suggested) {
     var div = document.createElement('div');
-    div.innerHTML = suggested.name;
+    div.innerHTML = suggested;
     $suggestion.appendChild(div);
   })
   if (input === '') {
