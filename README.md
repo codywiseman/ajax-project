@@ -1,7 +1,6 @@
 # Center Ice
 
-Center Ice is a dynamic HTML, CSS, and JavaScript web application that allows users to view each NHL teams active roster as well as general information on the 
-selected team.
+Center Ice is a dynamic HTML, CSS, and JavaScript web application that allows users to view to view information on NHL teams and players
 
 [Live Demo](https://codywiseman.github.io/ajax-project/)
 
