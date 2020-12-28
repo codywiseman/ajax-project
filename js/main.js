@@ -114,6 +114,9 @@ $playerForm.addEventListener('submit', function(e){
       i = playerIds.length;
       playerXhr.send();
     }
+    else if (i === (playerIds.length - 1)) {
+      dataview('not-found');
+    }
   }
 })
 
