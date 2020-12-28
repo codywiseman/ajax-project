@@ -27,7 +27,7 @@ selected team.
 
 ## Screenshots
 
-![Center Ice Screenshot](/Users/cjwiseman/lfz/ajax-project/Images/screenshot1.png)
-![Center Ice Screenshot]()
-![Center Ice Screenshot]()
+![Center Ice Screenshot](Images/screenshot4.png)
+![Center Ice Screenshot](Images/screenshot3.png)
+![Center Ice Screenshot](Images/screenshot2.png)
 ![Center Ice Screenshot](Images/screenshot1.png)
