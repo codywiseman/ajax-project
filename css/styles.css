@@ -1,24 +1,5 @@
 
-header {
-  background-color: black;
-  align-items: center;
-}
 
-h1 {
-  font-family: 'Open Sans', sans-serif;
-  color: white;
-  margin-right: 2rem;
-  text-align: right;
-}
-
-.logo {
-  width: 14rem;
-  cursor: pointer;
-}
-
-.logo img {
-  width: 100%;
-}
 
 
 .bold {
