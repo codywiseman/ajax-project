@@ -1,34 +1,34 @@
-var $teamSelect = document.querySelector('#team-select');
-var $viewClasses = document.querySelectorAll('.view');
-var $teamForm = document.querySelector('.team-form')
-var $teamPageDiv = document.querySelector('div[data-view="team-page');
-var $teamSelectOptions = document.getElementsByClassName('team');
-var $homeLogo = document.querySelector('.logo');
-var $playerPageDiv = document.querySelector('div[data-view="player-page');
-var $playerForm = document.querySelector('.player-form');
-var $playerSearch = document.querySelector('.player-search');
-var $suggestion = document.querySelector('.suggestions');
-var $rosterTable = document.querySelector('.roster-table');
-var $favoritePage = document.querySelector('div[data-view="favorite-page');
-var $btnFav = document.querySelector('.btn-fav');
-var $searchBox = document.getElementById('search-box')
-var $star = null;
+const $playerPageDiv = document.querySelector('div[data-view="player-page');
+const $teamSelect = document.getElementById('team-select');
+const $viewClasses = document.querySelectorAll('.view');
+const $teamForm = document.querySelector('.team-form')
+const $teamPageDiv = document.querySelector('div[data-view="team-page');
+const $teamSelectOptions = document.getElementsByClassName('team');
+const $homeLogo = document.querySelector('.logo');
+const $playerForm = document.querySelector('.player-form');
+const $playerSearch = document.querySelector('.player-search');
+const $suggestion = document.querySelector('.suggestions');
+const $rosterTable = document.querySelector('.roster-table');
+const $favoritePage = document.querySelector('div[data-view="favorite-page');
+const $btnFav = document.querySelector('.btn-fav');
+const $searchBox = document.getElementById('search-box')
+let $star = null;
 
 
-var teamsList = null;
+let teamsList = null;
 
-var playerIds = [];
+const playerIds = [];
 
-var playerNames = []
+const playerNames = []
 
-var player = null;
+let player = null;
 
-var thisSeasonStats = null;
+let thisSeasonStats = null;
 
 
 // Click NHL logo to clear page content
 
-$homeLogo.addEventListener('click', function () {
+$homeLogo.addEventListener('click', () => {
   $teamForm.reset();
   $playerForm.reset();
   $suggestion.innerHTML = '';
@@ -38,23 +38,23 @@ $homeLogo.addEventListener('click', function () {
 
 // Request for Teams
 
-var teamsXhr = new XMLHttpRequest();
+const teamsXhr = new XMLHttpRequest();
 teamsXhr.open('GET', 'https://statsapi.web.nhl.com/api/v1/teams?expand=team.roster');
 teamsXhr.responseType = 'json';
-teamsXhr.addEventListener('load', function() {
+teamsXhr.addEventListener('load', () => {
   teamsList = teamsXhr.response.teams;
-  for (var i = 0; i < teamsList.length; i++) {
-    var team = teamsList[i];
-    var teamOption = document.createElement('option');
+  for (let i = 0; i < teamsList.length; i++) {
+    const team = teamsList[i];
+    const teamOption = document.createElement('option');
     teamOption.value = teamsList[i].teamName;
     teamOption.className = 'team';
     teamOption.textContent = teamsList[i].name;
     $teamSelect.appendChild(teamOption);
   }
-  for (var z = 0; z < teamsList.length; z++) {
-    for (var x = 0; x < teamsList[z].roster.roster.length; x++) {
-      var obj = {};
-      var playerObj = {};
+  for (let z = 0; z < teamsList.length; z++) {
+    for (let x = 0; x < teamsList[z].roster.roster.length; x++) {
+      const obj = {};
+      const playerObj = {};
       obj[(teamsList[z].roster.roster[x].person.fullName).toLowerCase()] = teamsList[z].roster.roster[x].person.id;
       playerIds.push(obj);
       playerObj['name'] = (teamsList[z].roster.roster[x].person.fullName);
@@ -67,10 +67,10 @@ teamsXhr.send();
 
 //Select team and submit to be take to team page
 
-$teamForm.addEventListener('submit', function(e){
+$teamForm.addEventListener('submit', (e) => {
   e.preventDefault();
   if ($teamSelect.selectedIndex !== 0) {
-    $teamPageDiv.innerHTML ='';
+    $teamPageDiv.innerHTML = '';
     renderTeamPage($teamSelectOptions[($teamSelect.selectedIndex - 1)].textContent);
     renderRoster($teamSelectOptions[($teamSelect.selectedIndex - 1)].textContent);
     dataview('team-page');
@@ -80,28 +80,28 @@ $teamForm.addEventListener('submit', function(e){
 
 // Enter player name and submit to be taken to player page
 
-$playerForm.addEventListener('submit', function(e){
+$playerForm.addEventListener('submit', (e) => {
   e.preventDefault();
-  var playerXhr = new XMLHttpRequest();
-  var idName = $playerSearch.value.toLowerCase();
-  for(var i = 0; i < playerIds.length; i++) {
-    if(playerIds[i].hasOwnProperty(idName)) {
+  const playerXhr = new XMLHttpRequest();
+  let idName = $playerSearch.value.toLowerCase();
+  for (let i = 0; i < playerIds.length; i++) {
+    if (playerIds[i].hasOwnProperty(idName)) {
       id = playerIds[i][idName]
-      playerXhr.open('GET', 'https://statsapi.web.nhl.com/api/v1/people/' + id.toString());
+      playerXhr.open('GET',  `https://statsapi.web.nhl.com/api/v1/people/${id.toString()}`);
       playerXhr.responseType = 'json';
-      playerXhr.addEventListener('load', function (){
+      playerXhr.addEventListener('load', () => {
         player = playerXhr.response.people[0];
         $playerPageDiv.innerHTML = '';
         renderPlayerPage(player);
-        var statsXhr = new XMLHttpRequest();
-        statsXhr.open('GET', ' https://statsapi.web.nhl.com/api/v1/people/' + id.toString() + '/stats/?stats=yearByYear');
+        const statsXhr = new XMLHttpRequest();
+        statsXhr.open('GET', `https://statsapi.web.nhl.com/api/v1/people/${id.toString()}/stats/?stats=yearByYear`);
         statsXhr.responseType = 'json';
-        statsXhr.addEventListener('load', function () {
+        statsXhr.addEventListener('load', () => {
           allStats = statsXhr.response.stats[0].splits;
           thisSeasonStats = allStats[allStats.length - 1]
           renderPlayerStats(allStats);
           $star = document.getElementById('favorite');
-          for (var x = 0; x < savedPlayer.length; x++) {
+          for (let x = 0; x < savedPlayer.length; x++) {
             if (savedPlayer[x].player === player.fullName) {
               $star.className = 'fas fa-star';
             }
@@ -123,25 +123,25 @@ $playerForm.addEventListener('submit', function(e){
 
 // Player seach bar suggestions
 
-$playerSearch.addEventListener('keyup',playerSuggestions);
+$playerSearch.addEventListener('keyup', playerSuggestions);
 
 function playerSuggestions() {
-  var input = $playerSearch.value;
+  let input = $playerSearch.value;
   $suggestion.innerHTML = '';
-  var startsWith = [];
-  playerNames.forEach(function(player) {
-    if(player.name.toLowerCase().startsWith(input.toLowerCase())) {
+  const startsWith = [];
+  playerNames.forEach((player) => {
+    if (player.name.toLowerCase().startsWith(input.toLowerCase())) {
       startsWith.push(player.name);
     }
   });
-  var condensedSuggestions = [];
-  for (var i = 0; i < 6; i++){
-    if(startsWith[i] !== undefined) {
+  const condensedSuggestions = [];
+  for (let i = 0; i < 6; i++) {
+    if (startsWith[i] !== undefined) {
       condensedSuggestions.push(startsWith[i]);
     }
   }
-  condensedSuggestions.forEach(function(suggested) {
-    var div = document.createElement('div');
+  condensedSuggestions.forEach((suggested) => {
+    const div = document.createElement('div');
     div.innerHTML = suggested;
     $suggestion.appendChild(div);
   })
@@ -150,35 +150,35 @@ function playerSuggestions() {
   }
 }
 
-$suggestion.addEventListener('click', function(e) {
+$suggestion.addEventListener('click', (e) => {
   $playerSearch.value = e.target.innerHTML;
   $suggestion.innerHTML = '';
 })
 
 // Click on player on roster table to be taken to player page
 
-document.addEventListener('click', function (e) {
+document.addEventListener('click', (e) => {
   if (data.view === 'team-page' && e.target.tagName === 'TD') {
-    var idName = e.target.closest('.player-row').innerHTML.toLowerCase();
-    var playerXhr = new XMLHttpRequest();
-    for (var i = 0; i < playerIds.length; i++) {
+    let idName = e.target.closest('.player-row').innerHTML.toLowerCase();
+    const playerXhr = new XMLHttpRequest();
+    for (let i = 0; i < playerIds.length; i++) {
       if (playerIds[i].hasOwnProperty(idName)) {
-        var id = playerIds[i][idName];
-        playerXhr.open('GET', 'https://statsapi.web.nhl.com/api/v1/people/' + id.toString());
+        let id = playerIds[i][idName];
+        playerXhr.open('GET', `https://statsapi.web.nhl.com/api/v1/people/${id.toString()}`);
         playerXhr.responseType = 'json';
-        playerXhr.addEventListener('load', function () {
+        playerXhr.addEventListener('load', () => {
           player = playerXhr.response.people[0];
           $playerPageDiv.innerHTML = '';
           renderPlayerPage(player);
-          var statsXhr = new XMLHttpRequest();
-          statsXhr.open('GET', ' https://statsapi.web.nhl.com/api/v1/people/' + id.toString() + '/stats/?stats=yearByYear');
+          const statsXhr = new XMLHttpRequest();
+          statsXhr.open('GET', `https://statsapi.web.nhl.com/api/v1/people/${id.toString()}/stats/?stats=yearByYear`);
           statsXhr.responseType = 'json';
-          statsXhr.addEventListener('load', function () {
+          statsXhr.addEventListener('load', () => {
             allStats = statsXhr.response.stats[0].splits;
             thisSeasonStats = allStats[allStats.length - 1]
             renderPlayerStats(allStats);
             $star = document.getElementById('favorite');
-            for (var x = 0; x < savedPlayer.length; x++) {
+            for (let x = 0; x < savedPlayer.length; x++) {
               if (savedPlayer[x].player === player.fullName) {
                 $star.className = 'fas fa-star';
               }
@@ -197,18 +197,18 @@ document.addEventListener('click', function (e) {
 
 // Click on star to favorite player / unfavorite player
 
-$playerPageDiv.addEventListener('click', function (e) {
+$playerPageDiv.addEventListener('click', (e) => {
   $star = document.getElementById('favorite');
-  if (e.target === $star && $star.className ==='far fa-star') {
+  if (e.target === $star && $star.className === 'far fa-star') {
     $star.className = 'fas fa-star';
-    var playerSaveObj = {};
+    const playerSaveObj = {};
     playerSaveObj['player'] = player.fullName;
     playerSaveObj['seasonStats'] = thisSeasonStats;
     savedPlayer.push(playerSaveObj);
   } else {
-    for (var i = 0; i < savedPlayer.length; i++){
+    for (let i = 0; i < savedPlayer.length; i++) {
       if (savedPlayer[i].player === player.fullName) {
-        savedPlayer.splice(i , 1);
+        savedPlayer.splice(i, 1);
       }
       $star.className = 'far fa-star';
     }
@@ -217,7 +217,7 @@ $playerPageDiv.addEventListener('click', function (e) {
 
 // Click on view tracked players
 
-$btnFav.addEventListener('click', function() {
+$btnFav.addEventListener('click', () => {
   $favoritePage.innerHTML = '';
   renderFavorites(savedPlayer);
   dataview('favorite-page');
@@ -225,7 +225,7 @@ $btnFav.addEventListener('click', function() {
 
 //Render team info on team page
 
-var teamLogoImages = {
+const teamLogoImages = {
   'New Jersey Devils': 'Images/devils.png',
   'New York Islanders': 'Images/islanders.png',
   'New York Rangers': 'Images/rangers.png',
@@ -236,7 +236,7 @@ var teamLogoImages = {
   'Montréal Canadiens': 'Images/canadiens.png',
   'Ottawa Senators': 'Images/senators.png',
   'Toronto Maple Leafs': 'Images/mapleleafs.png',
-  'Carolina Hurricanes':'Images/canes.png',
+  'Carolina Hurricanes': 'Images/canes.png',
   'Florida Panthers': 'Images/panthers.png',
   'Tampa Bay Lightning': 'Images/lightning.png',
   'Washington Capitals': 'Images/capitals.png',
@@ -260,48 +260,48 @@ var teamLogoImages = {
 }
 
 function renderTeamPage(team) {
-  for (var i = 0; i < teamsList.length; i++) {
+  for (let i = 0; i < teamsList.length; i++) {
     if (teamsList[i].name === team) {
-      var divOne = document.createElement('div');
+      const divOne = document.createElement('div');
       divOne.setAttribute('class', 'flex-col my-2');
 
-      var teamLogo = document.createElement('img');
+      const teamLogo = document.createElement('img');
       teamLogo.setAttribute('src', teamLogoImages[team])
       teamLogo.setAttribute('class', 'logo')
 
-      var divTwo = document.createElement('div');
+      const divTwo = document.createElement('div');
       divTwo.setAttribute('class', 'team-info');
 
-      var pOne = document.createElement('p')
-      var spanOne = document.createElement('span')
+      const pOne = document.createElement('p')
+      const spanOne = document.createElement('span')
       pOne.textContent = teamsList[i].name;
       spanOne.setAttribute('class', 'bold');
       spanOne.textContent = 'Team Name: ';
       pOne.prepend(spanOne);
 
-      var pTwo = document.createElement('p')
-      var spanTwo = document.createElement('span')
+      const pTwo = document.createElement('p')
+      const spanTwo = document.createElement('span')
       pTwo.textContent = teamsList[i].abbreviation;
       spanTwo.setAttribute('class', 'bold');
       spanTwo.textContent = 'Abbreviation: ';
       pTwo.prepend(spanTwo);
 
-      var pThree = document.createElement('p')
-      var spanThree = document.createElement('span')
+      const pThree = document.createElement('p')
+      const spanThree = document.createElement('span')
       pThree.textContent = teamsList[i].firstYearOfPlay;
       spanThree.setAttribute('class', 'bold');
       spanThree.textContent = 'Inaugural Season: ';
       pThree.prepend(spanThree);
 
-      var pFour = document.createElement('p')
-      var spanFour = document.createElement('span')
+      const pFour = document.createElement('p')
+      const spanFour = document.createElement('span')
       pFour.textContent = teamsList[i].conference.name;
       spanFour.setAttribute('class', 'bold');
       spanFour.textContent = 'Conference: ';
       pFour.prepend(spanFour);
 
-      var pFive = document.createElement('p')
-      var spanFive = document.createElement('span')
+      const pFive = document.createElement('p')
+      const spanFive = document.createElement('span')
       pFive.textContent = teamsList[i].division.name;
       spanFive.setAttribute('class', 'bold');
       spanFive.textContent = 'Division: ';
@@ -322,33 +322,33 @@ function renderTeamPage(team) {
 // Render roster on team page
 
 function renderRoster(team) {
-  for(var i = 0; i < teamsList.length; i++) {
-    if(teamsList[i].name === team) {
-      var teamRoster = [];
-      for (var x = 0; x < teamsList[i].roster.roster.length; x++) {
+  for (let i = 0; i < teamsList.length; i++) {
+    if (teamsList[i].name === team) {
+      const teamRoster = [];
+      for (let x = 0; x < teamsList[i].roster.roster.length; x++) {
         teamRoster.push(teamsList[i].roster.roster[x])
       }
-      var tableLabel = document.createElement('h3');
+      const tableLabel = document.createElement('h3');
       tableLabel.textContent = 'Roster'
 
-      var table = document.createElement('table')
+      const table = document.createElement('table')
       table.setAttribute('class', 'roster-table');
 
-      var tableHead = document.createElement('thead');
+      const tableHead = document.createElement('thead');
 
-      var headRow = document.createElement('tr');
+      const headRow = document.createElement('tr');
 
-      var tHeadOne = document.createElement('th');
+      const tHeadOne = document.createElement('th');
       tHeadOne.setAttribute('class', 'col-one');
       tHeadOne.textContent = 'No.'
 
-      var tHeadTwo = document.createElement('th');
+      const tHeadTwo = document.createElement('th');
       tHeadTwo.textContent = 'Player'
 
-      var tHeadThree = document.createElement('th');
+      const tHeadThree = document.createElement('th');
       tHeadThree.textContent = 'Position'
 
-      var tableBody = document.createElement('tbody');
+      const tableBody = document.createElement('tbody');
       tableBody.setAttribute('id', 'rosterBody')
 
       headRow.appendChild(tHeadOne);
@@ -358,17 +358,17 @@ function renderRoster(team) {
       table.appendChild(tableHead);
       $teamPageDiv.appendChild(tableLabel);
 
-      for(var rosterSpot = 0; rosterSpot < teamRoster.length; rosterSpot++) {
-        var tableRow = document.createElement('tr');
+      for (let rosterSpot = 0; rosterSpot < teamRoster.length; rosterSpot++) {
+        const tableRow = document.createElement('tr');
 
-        var tDataOne = document.createElement('td');
+        const tDataOne = document.createElement('td');
         tDataOne.textContent = teamRoster[rosterSpot].jerseyNumber;
 
-        var tDataTwo = document.createElement('td');
+        const tDataTwo = document.createElement('td');
         tDataTwo.setAttribute('class', 'player-row')
         tDataTwo.textContent = teamRoster[rosterSpot].person.fullName;
 
-        var tDataThree = document.createElement('td');
+        const tDataThree = document.createElement('td');
         tDataThree.textContent = teamRoster[rosterSpot].position.name;
 
         tableRow.appendChild(tDataOne);
@@ -385,43 +385,42 @@ function renderRoster(team) {
 // Render player info on player page
 
 function renderPlayerPage(person) {
-  var nameHeading = document.createElement('h2');
+  const nameHeading = document.createElement('h2');
   nameHeading.setAttribute('class', 'player-name');
   nameHeading.textContent = person.fullName;
 
-  var star = document.createElement('i');
+  const star = document.createElement('i');
   star.setAttribute('class', 'far fa-star');
   star.setAttribute('id', 'favorite');
   nameHeading.prepend(star);
 
-  var infoHeading = document.createElement('h4');
+  const infoHeading = document.createElement('h4');
   infoHeading.setAttribute('class', 'player-info');
-  infoHeading.textContent = person.primaryPosition.code + ' | ' + person.height + ' | ' +
-  person.weight + 'lb' + ' | ' + 'Age ' + person.currentAge + ' | ' + person.currentTeam.name;
+  infoHeading.textContent = `${person.primaryPosition.code} | ${person.height} | ${person.weight} lb | Age ${person.currentAge} | ${person.currentTeam.name}`;
 
-  var pOne = document.createElement('p')
-  var spanOne = document.createElement('span')
+  const pOne = document.createElement('p')
+  const spanOne = document.createElement('span')
   pOne.setAttribute('class', 'player-info');
-  pOne.textContent = person.birthCity + ', ' + person.birthCountry;
+  pOne.textContent = `${person.birthCity}, ${person.birthCountry}`;
   spanOne.setAttribute('class', 'bold');
   spanOne.textContent = 'Birthplace: '
   pOne.prepend(spanOne);
 
 
-  var pTwo = document.createElement('p')
-  var spanTwo = document.createElement('span')
+  const pTwo = document.createElement('p')
+  const spanTwo = document.createElement('span')
   pTwo.setAttribute('class', 'player-info');
   pTwo.textContent = person.birthDate
   spanTwo.setAttribute('class', 'bold');
   spanTwo.textContent = 'Birthdate: '
   pTwo.prepend(spanTwo);
 
-  var pThree = document.createElement('p')
-  var spanThree = document.createElement('span')
+  const pThree = document.createElement('p')
+  const spanThree = document.createElement('span')
   pThree.setAttribute('class', 'player-info');
   pThree.textContent = person.shootsCatches;
   spanThree.setAttribute('class', 'bold');
-  if(person.primaryPosition.code === 'G') {
+  if (person.primaryPosition.code === 'G') {
     spanThree.textContent = 'Catches: '
   } else {
     spanThree.textContent = 'Shoots: '
@@ -438,30 +437,30 @@ function renderPlayerPage(person) {
 //Render player stats on player page
 
 function renderPlayerStats(stats) {
-  var statsTitle = document.createElement('h4');
+  const statsTitle = document.createElement('h4');
   statsTitle.textContent = 'Statistics';
 
-  var tableDiv = document.createElement('div');
+  const tableDiv = document.createElement('div');
   tableDiv.setAttribute('class', 'stats-table-div table-responsive');
 
-  var table  = document.createElement('table');
+  const table = document.createElement('table');
   table.setAttribute('class', 'stats-table');
 
-  var thead = document.createElement('thead');
+  const thead = document.createElement('thead');
 
-  var trowOne = document.createElement('tr');
+  const trowOne = document.createElement('tr');
   trowOne.setAttribute('class', 'stats-row');
 
-  var th1 = document.createElement('th');
+  const th1 = document.createElement('th');
   th1.textContent = 'YR'
 
-  var th2 = document.createElement('th');
+  const th2 = document.createElement('th');
   th2.textContent = 'TM'
 
-  var th3 = document.createElement('th');
+  const th3 = document.createElement('th');
   th3.textContent = 'LG'
 
-  var th4 = document.createElement('th');
+  const th4 = document.createElement('th');
   th4.textContent = 'GP'
 
   $playerPageDiv.appendChild(statsTitle);
@@ -474,29 +473,29 @@ function renderPlayerStats(stats) {
   trowOne.appendChild(th3);
   trowOne.appendChild(th4);
 
-  if(player.primaryPosition.code === 'G') {
-    var goalieHeadingOne = document.createElement('th');
+  if (player.primaryPosition.code === 'G') {
+    const goalieHeadingOne = document.createElement('th');
     goalieHeadingOne.textContent = 'W'
 
-    var goalieHeadingTwo = document.createElement('th');
+    const goalieHeadingTwo = document.createElement('th');
     goalieHeadingTwo.textContent = 'L'
 
-    var goalieHeadingThree = document.createElement('th');
+    const goalieHeadingThree = document.createElement('th');
     goalieHeadingThree.textContent = 'GA'
 
-    var goalieHeadingFour = document.createElement('th');
+    const goalieHeadingFour = document.createElement('th');
     goalieHeadingFour.textContent = 'GAA'
 
-    var goalieHeadingFive = document.createElement('th');
+    const goalieHeadingFive = document.createElement('th');
     goalieHeadingFive.textContent = 'SO'
 
-    var goalieHeadingSix = document.createElement('th');
+    const goalieHeadingSix = document.createElement('th');
     goalieHeadingSix.textContent = 'SAVES'
 
-    var goalieHeadingSeven = document.createElement('th');
+    const goalieHeadingSeven = document.createElement('th');
     goalieHeadingSeven.textContent = 'SV%'
 
-    var tbody = document.createElement('tbody');
+    const tbody = document.createElement('tbody');
 
     trowOne.appendChild(goalieHeadingOne);
     trowOne.appendChild(goalieHeadingTwo);
@@ -507,45 +506,45 @@ function renderPlayerStats(stats) {
     trowOne.appendChild(goalieHeadingSeven);
     table.appendChild(tbody);
 
-    for (var x = (stats.length - 1); x > 0; x--) {
-      var tbrow = document.createElement('tr');
+    for (let x = (stats.length - 1); x > 0; x--) {
+      const tbrow = document.createElement('tr');
       tbrow.setAttribute('class', 'stats-row');
 
-      var td1 = document.createElement('td');
+      const td1 = document.createElement('td');
       td1.textContent = stats[x].season;
 
-      var td2 = document.createElement('td');
+      const td2 = document.createElement('td');
       td2.textContent = stats[x].team.name;
 
-      var td3 = document.createElement('td');
+      const td3 = document.createElement('td');
       if (stats[x].league.name === 'National Hockey League') {
         td3.textContent = 'NHL'
       } else {
         td3.textContent = stats[x].league.name;
       }
 
-      var td4 = document.createElement('td');
+      const td4 = document.createElement('td');
       td4.textContent = stats[x].stat.games;
 
-      var td5 = document.createElement('td');
+      const td5 = document.createElement('td');
       td5.textContent = stats[x].stat.wins;
 
-      var td6 = document.createElement('td');
+      const td6 = document.createElement('td');
       td6.textContent = stats[x].stat.losses;
 
-      var td7 = document.createElement('td');
+      const td7 = document.createElement('td');
       td7.textContent = stats[x].stat.goalsAgainst;
 
-      var td8 = document.createElement('td');
+      const td8 = document.createElement('td');
       td8.textContent = stats[x].stat.goalAgainstAverage;
 
-      var td9 = document.createElement('td');
+      const td9 = document.createElement('td');
       td9.textContent = stats[x].stat.shutouts;
 
-      var td10 = document.createElement('td');
+      const td10 = document.createElement('td');
       td10.textContent = stats[x].stat.saves;
 
-      var td11 = document.createElement('td');
+      const td11 = document.createElement('td');
       td11.textContent = stats[x].stat.savePercentage;
 
       tbrow.appendChild(td1);
@@ -564,204 +563,204 @@ function renderPlayerStats(stats) {
   }
   else {
 
-  var th5 = document.createElement('th');
-  th5.textContent = 'G'
+    const th5 = document.createElement('th');
+    th5.textContent = 'G'
 
-  var th6 = document.createElement('th');
-  th6.textContent = 'A'
+    const th6 = document.createElement('th');
+    th6.textContent = 'A'
 
-  var th7 = document.createElement('th');
-  th7.textContent = 'PTS'
+    const th7 = document.createElement('th');
+    th7.textContent = 'PTS'
 
-  var th8 = document.createElement('th');
-  th8.textContent = 'S'
+    const th8 = document.createElement('th');
+    th8.textContent = 'S'
 
-  var th9 = document.createElement('th');
-  th9.textContent = 'S%'
+    const th9 = document.createElement('th');
+    th9.textContent = 'S%'
 
-  var th10 = document.createElement('th');
-  th10.textContent = '+/-'
+    const th10 = document.createElement('th');
+    th10.textContent = '+/-'
 
-  var th11 = document.createElement('th');
-  th11.textContent = 'PIM'
+    const th11 = document.createElement('th');
+    th11.textContent = 'PIM'
 
-  var th12 = document.createElement('th');
-  th12.textContent = 'SHG'
+    const th12 = document.createElement('th');
+    th12.textContent = 'SHG'
 
-  var th13 = document.createElement('th');
-  th13.textContent = 'PPG'
+    const th13 = document.createElement('th');
+    th13.textContent = 'PPG'
 
-  var th14 = document.createElement('th');
-  th14.textContent = 'GWG'
+    const th14 = document.createElement('th');
+    th14.textContent = 'GWG'
 
-  var th15 = document.createElement('th');
-  th15.textContent = 'OTG'
+    const th15 = document.createElement('th');
+    th15.textContent = 'OTG'
 
-  var th16 = document.createElement('th');
-  th16.textContent = 'TOI'
+    const th16 = document.createElement('th');
+    th16.textContent = 'TOI'
 
-  var th18 = document.createElement('th');
-  th18.textContent = 'FO%'
+    const th18 = document.createElement('th');
+    th18.textContent = 'FO%'
 
-  var th19 = document.createElement('th');
-  th19.textContent = 'BLK'
+    const th19 = document.createElement('th');
+    th19.textContent = 'BLK'
 
-  var th20 = document.createElement('th');
-  th20.textContent = 'HITS'
+    const th20 = document.createElement('th');
+    th20.textContent = 'HITS'
 
-  var tbody = document.createElement('tbody');
+    const tbody = document.createElement('tbody');
 
-  trowOne.appendChild(th5);
-  trowOne.appendChild(th6);
-  trowOne.appendChild(th7);
-  trowOne.appendChild(th8);
-  trowOne.appendChild(th9);
-  trowOne.appendChild(th10);
-  trowOne.appendChild(th11);
-  trowOne.appendChild(th12);
-  trowOne.appendChild(th13);
-  trowOne.appendChild(th14);
-  trowOne.appendChild(th15);
-  trowOne.appendChild(th16);
-  trowOne.appendChild(th18);
-  trowOne.appendChild(th19);
-  trowOne.appendChild(th20);
-  table.appendChild(tbody);
+    trowOne.appendChild(th5);
+    trowOne.appendChild(th6);
+    trowOne.appendChild(th7);
+    trowOne.appendChild(th8);
+    trowOne.appendChild(th9);
+    trowOne.appendChild(th10);
+    trowOne.appendChild(th11);
+    trowOne.appendChild(th12);
+    trowOne.appendChild(th13);
+    trowOne.appendChild(th14);
+    trowOne.appendChild(th15);
+    trowOne.appendChild(th16);
+    trowOne.appendChild(th18);
+    trowOne.appendChild(th19);
+    trowOne.appendChild(th20);
+    table.appendChild(tbody);
 
-  for (var i = (stats.length - 1); i > 0; i--) {
-    var tbrow = document.createElement('tr');
-    tbrow.setAttribute('class', 'stats-row');
+    for (let i = (stats.length - 1); i > 0; i--) {
+      const tbrow = document.createElement('tr');
+      tbrow.setAttribute('class', 'stats-row');
 
-    var td1 = document.createElement('td');
-    td1.textContent = stats[i].season;
+      const td1 = document.createElement('td');
+      td1.textContent = stats[i].season;
 
-    var td2 = document.createElement('td');
-    td2.textContent = stats[i].team.name;
+      const td2 = document.createElement('td');
+      td2.textContent = stats[i].team.name;
 
-    var td3 = document.createElement('td');
-    if (stats[i].league.name === 'National Hockey League') {
-      td3.textContent = 'NHL'
-    } else {
-      td3.textContent = stats[i].league.name;
-    }
+      const td3 = document.createElement('td');
+      if (stats[i].league.name === 'National Hockey League') {
+        td3.textContent = 'NHL'
+      } else {
+        td3.textContent = stats[i].league.name;
+      }
 
-    var td4 = document.createElement('td');
-    td4.textContent = stats[i].stat.games;
+      const td4 = document.createElement('td');
+      td4.textContent = stats[i].stat.games;
 
-    var td5 = document.createElement('td');
-    td5.textContent = stats[i].stat.goals;
+      const td5 = document.createElement('td');
+      td5.textContent = stats[i].stat.goals;
 
-    var td6 = document.createElement('td');
-    td6.textContent = stats[i].stat.assists;
+      const td6 = document.createElement('td');
+      td6.textContent = stats[i].stat.assists;
 
-    var td7 = document.createElement('td');
-    td7.textContent = stats[i].stat.points;
+      const td7 = document.createElement('td');
+      td7.textContent = stats[i].stat.points;
 
-    var td8 = document.createElement('td');
-    td8.textContent = stats[i].stat.shots;
+      const td8 = document.createElement('td');
+      td8.textContent = stats[i].stat.shots;
 
-    var td9 = document.createElement('td');
-    td9.textContent = stats[i].stat.shotPct;
+      const td9 = document.createElement('td');
+      td9.textContent = stats[i].stat.shotPct;
 
-    var td10 = document.createElement('td');
-    td10.textContent = stats[i].stat.plusMinus;
+      const td10 = document.createElement('td');
+      td10.textContent = stats[i].stat.plusMinus;
 
-    var td11 = document.createElement('td');
-    td11.textContent = stats[i].stat.penaltyMinutes;
+      const td11 = document.createElement('td');
+      td11.textContent = stats[i].stat.penaltyMinutes;
 
-    var td12 = document.createElement('td');
-    td12.textContent = stats[i].stat.shortHandedGoals;
+      const td12 = document.createElement('td');
+      td12.textContent = stats[i].stat.shortHandedGoals;
 
-    var td13 = document.createElement('td');
-    td13.textContent = stats[i].stat.powerPlayGoals;
+      const td13 = document.createElement('td');
+      td13.textContent = stats[i].stat.powerPlayGoals;
 
-    var td14 = document.createElement('td');
-    td14.textContent = stats[i].stat.gameWinningGoals;
+      const td14 = document.createElement('td');
+      td14.textContent = stats[i].stat.gameWinningGoals;
 
-    var td15 = document.createElement('td');
-    td15.textContent = stats[i].stat.overTimeGoals;
+      const td15 = document.createElement('td');
+      td15.textContent = stats[i].stat.overTimeGoals;
 
-    var td16 = document.createElement('td');
-    td16.textContent = stats[i].stat.timeOnIce;
+      const td16 = document.createElement('td');
+      td16.textContent = stats[i].stat.timeOnIce;
 
-    var td18 = document.createElement('td');
-    td18.textContent = stats[i].stat.faceOffPct;
+      const td18 = document.createElement('td');
+      td18.textContent = stats[i].stat.faceOffPct;
 
-    var td19 = document.createElement('td');
-    td19.textContent = stats[i].stat.blocked;
+      const td19 = document.createElement('td');
+      td19.textContent = stats[i].stat.blocked;
 
-    var td20 = document.createElement('td');
-    td20.textContent = stats[i].stat.hits;
+      const td20 = document.createElement('td');
+      td20.textContent = stats[i].stat.hits;
 
-    tbrow.appendChild(td1);
-    tbrow.appendChild(td2);
-    tbrow.appendChild(td3);
-    tbrow.appendChild(td4);
-    tbrow.appendChild(td5);
-    tbrow.appendChild(td6);
-    tbrow.appendChild(td7);
-    tbrow.appendChild(td8);
-    tbrow.appendChild(td9);
-    tbrow.appendChild(td10);
-    tbrow.appendChild(td11);
-    tbrow.appendChild(td12);
-    tbrow.appendChild(td13);
-    tbrow.appendChild(td14);
-    tbrow.appendChild(td15);
-    tbrow.appendChild(td16);
-    tbrow.appendChild(td18);
-    tbrow.appendChild(td19);
-    tbrow.appendChild(td20);
-    tbody.appendChild(tbrow)
+      tbrow.appendChild(td1);
+      tbrow.appendChild(td2);
+      tbrow.appendChild(td3);
+      tbrow.appendChild(td4);
+      tbrow.appendChild(td5);
+      tbrow.appendChild(td6);
+      tbrow.appendChild(td7);
+      tbrow.appendChild(td8);
+      tbrow.appendChild(td9);
+      tbrow.appendChild(td10);
+      tbrow.appendChild(td11);
+      tbrow.appendChild(td12);
+      tbrow.appendChild(td13);
+      tbrow.appendChild(td14);
+      tbrow.appendChild(td15);
+      tbrow.appendChild(td16);
+      tbrow.appendChild(td18);
+      tbrow.appendChild(td19);
+      tbrow.appendChild(td20);
+      tbody.appendChild(tbrow)
     }
   }
 }
 
 // Render favorite players from storage on favorites page
 
-function renderFavorites (players) {
+function renderFavorites(players) {
   if (savedPlayer[0] === undefined) {
-    var tableLabelNone = document.createElement('h5');
+    const tableLabelNone = document.createElement('h5');
     tableLabelNone.textContent = 'Currently No Players Being Tracked';
     $favoritePage.appendChild(tableLabelNone);
     return;
   }
-  var tableLabel = document.createElement('h5');
+  const tableLabel = document.createElement('h5');
   tableLabel.textContent = 'Tracked Players (Current Season Stats)'
 
-  var tableDiv = document.createElement('div');
+  const tableDiv = document.createElement('div');
   tableDiv.setAttribute('class', 'stats-table-div table-responsive');
 
-  var table = document.createElement('table');
+  const table = document.createElement('table');
   table.setAttribute('class', 'stats-table center-table');
 
-  var thead = document.createElement('thead');
+  const thead = document.createElement('thead');
 
-  var tHeadRow = document.createElement('tr');
+  const tHeadRow = document.createElement('tr');
   tHeadRow.setAttribute('class', 'stats-row');
 
-  var th1 = document.createElement('th');
+  const th1 = document.createElement('th');
   th1.textContent = 'Player';
 
-  var th2 = document.createElement('th');
+  const th2 = document.createElement('th');
   th2.textContent = 'Team';
 
-  var th3 = document.createElement('th');
+  const th3 = document.createElement('th');
   th3.textContent = 'GP';
 
-  var th4 = document.createElement('th');
+  const th4 = document.createElement('th');
   th4.textContent = 'G';
 
-  var th5 = document.createElement('th');
+  const th5 = document.createElement('th');
   th5.textContent = 'A';
 
-  var th6 = document.createElement('th');
+  const th6 = document.createElement('th');
   th6.textContent = 'PTS';
 
-  var th7 = document.createElement('th');
+  const th7 = document.createElement('th');
   th7.textContent = '+/-';
 
-  var tBody = document.createElement('tbody')
+  const tBody = document.createElement('tbody')
 
   $favoritePage.appendChild(tableLabel);
   $favoritePage.appendChild(tableDiv);
@@ -777,29 +776,29 @@ function renderFavorites (players) {
   tHeadRow.appendChild(th7);
   table.appendChild(tBody);
 
-  for(var i = 0; i < savedPlayer.length; i++) {
-    var tableRow = document.createElement('tr');
+  for (let i = 0; i < savedPlayer.length; i++) {
+    const tableRow = document.createElement('tr');
     tableRow.setAttribute('class', 'stats-row');
 
-    var td1 = document.createElement('td');
+    const td1 = document.createElement('td');
     td1.textContent = players[i].player;
 
-    var td2 = document.createElement('td');
+    const td2 = document.createElement('td');
     td2.textContent = players[i].seasonStats.team.name;
 
-    var td3 = document.createElement('td');
+    const td3 = document.createElement('td');
     td3.textContent = players[i].seasonStats.stat.games;
 
-    var td4 = document.createElement('td');
+    const td4 = document.createElement('td');
     td4.textContent = players[i].seasonStats.stat.goals;
 
-    var td5 = document.createElement('td');
+    const td5 = document.createElement('td');
     td5.textContent = players[i].seasonStats.stat.assists;
 
-    var td6 = document.createElement('td');
+    const td6 = document.createElement('td');
     td6.textContent = players[i].seasonStats.stat.points;
 
-    var td7 = document.createElement('td');
+    const td7 = document.createElement('td');
     td7.textContent = players[i].seasonStats.stat.plusMinus;
 
     tableRow.appendChild(td1);
@@ -813,10 +812,10 @@ function renderFavorites (players) {
   }
 }
 
- // View Swapping
+// View Swapping
 
 function dataview(viewName) {
-  for(var i = 0; i < $viewClasses.length; i++) {
+  for (let i = 0; i < $viewClasses.length; i++) {
     if ($viewClasses[i].getAttribute('data-view') === viewName) {
       $viewClasses[i].className = 'view';
       data.view = viewName;

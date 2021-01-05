@@ -1,20 +1,18 @@
 /* exported data */
 
-var data = {
+const data = {
   view: 'home-page',
 }
 
-var savedPlayer = []
+let savedPlayer = []
 
-var previousSavedPlayerJSON = localStorage.getItem('saved-players')
+let previousSavedPlayerJSON = localStorage.getItem('saved-players')
 
 if(previousSavedPlayerJSON != null) {
   savedPlayer = (JSON.parse(previousSavedPlayerJSON));
 }
 
-var $playerPageDiv = document.querySelector('div[data-view="player-page');
-
 window.addEventListener('click', function(e) {
-  var playerJSON = JSON.stringify(savedPlayer);
+  const playerJSON = JSON.stringify(savedPlayer);
   localStorage.setItem('saved-players', playerJSON);
 })
