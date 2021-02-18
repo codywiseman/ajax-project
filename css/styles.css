@@ -7,6 +7,12 @@ header {
 
 .background {
   background-color: #F6F6F6;
+  min-height: 100vh;
+}
+
+p {
+  max-width: 650px;
+  margin: auto;
 }
 
 h1 {
