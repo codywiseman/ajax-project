@@ -10,7 +10,7 @@ header {
   min-height: 100vh;
 }
 
-p {
+.info {
   max-width: 650px;
   margin: auto;
 }
