@@ -32,7 +32,7 @@ $homeLogo.addEventListener('click', () => {
   $teamForm.reset();
   $playerForm.reset();
   $suggestion.innerHTML = '';
-  dataview('home-page');
+  dataview('landing-page');
 })
 
 
@@ -328,6 +328,9 @@ function renderRoster(team) {
       for (let x = 0; x < teamsList[i].roster.roster.length; x++) {
         teamRoster.push(teamsList[i].roster.roster[x])
       }
+      teamRoster.sort((a,b) => {
+        return a.jerseyNumber - b.jerseyNumber;
+      });
       const tableLabel = document.createElement('h3');
       tableLabel.textContent = 'Roster'
 
@@ -340,13 +343,16 @@ function renderRoster(team) {
 
       const tHeadOne = document.createElement('th');
       tHeadOne.setAttribute('class', 'col-one');
-      tHeadOne.textContent = 'No.'
+      tHeadOne.textContent = 'No.';
+      tHeadOne.title = 'Number';
 
       const tHeadTwo = document.createElement('th');
-      tHeadTwo.textContent = 'Player'
+      tHeadTwo.textContent = 'Player';
+      tHeadTwo.title = 'Player';
 
       const tHeadThree = document.createElement('th');
-      tHeadThree.textContent = 'Position'
+      tHeadThree.textContent = 'Position';
+      tHeadThree.title = 'Position';
 
       const tableBody = document.createElement('tbody');
       tableBody.setAttribute('id', 'rosterBody')
@@ -452,16 +458,20 @@ function renderPlayerStats(stats) {
   trowOne.setAttribute('class', 'stats-row');
 
   const th1 = document.createElement('th');
-  th1.textContent = 'YR'
+  th1.textContent = 'YR';
+  th1.title= 'Year';
 
   const th2 = document.createElement('th');
   th2.textContent = 'TM'
+  th2.title = 'Team'
 
   const th3 = document.createElement('th');
   th3.textContent = 'LG'
+  th3.title = 'League';
 
   const th4 = document.createElement('th');
   th4.textContent = 'GP'
+  th4.title = 'Games Played'
 
   $playerPageDiv.appendChild(statsTitle);
   $playerPageDiv.appendChild(tableDiv);
@@ -475,25 +485,32 @@ function renderPlayerStats(stats) {
 
   if (player.primaryPosition.code === 'G') {
     const goalieHeadingOne = document.createElement('th');
-    goalieHeadingOne.textContent = 'W'
+    goalieHeadingOne.textContent = 'W';
+    goalieHeadingOne.title = 'Wins';
 
     const goalieHeadingTwo = document.createElement('th');
-    goalieHeadingTwo.textContent = 'L'
+    goalieHeadingTwo.textContent = 'L';
+    goalieHeadingTwo.title = 'Losses';
 
     const goalieHeadingThree = document.createElement('th');
     goalieHeadingThree.textContent = 'GA'
+    goalieHeadingThree.title = 'Goals Against';
 
     const goalieHeadingFour = document.createElement('th');
-    goalieHeadingFour.textContent = 'GAA'
+    goalieHeadingFour.textContent = 'GAA';
+    goalieHeadingFour.title = 'Goals Against Average';
 
     const goalieHeadingFive = document.createElement('th');
-    goalieHeadingFive.textContent = 'SO'
+    goalieHeadingFive.textContent = 'SO';
+    goalieHeadingFive.title ='Shutouts';
 
     const goalieHeadingSix = document.createElement('th');
-    goalieHeadingSix.textContent = 'SAVES'
+    goalieHeadingSix.textContent = 'SAVES';
+    goalieHeadingSix.title = 'Saves';
 
     const goalieHeadingSeven = document.createElement('th');
-    goalieHeadingSeven.textContent = 'SV%'
+    goalieHeadingSeven.textContent = 'SV%';
+    goalieHeadingSeven.title = 'Save Percentage';
 
     const tbody = document.createElement('tbody');
 
@@ -741,24 +758,31 @@ function renderFavorites(players) {
 
   const th1 = document.createElement('th');
   th1.textContent = 'Player';
+  th1.title = 'Player';
 
   const th2 = document.createElement('th');
   th2.textContent = 'Team';
+  th2.title = 'Team'
 
   const th3 = document.createElement('th');
   th3.textContent = 'GP';
+  th3.title = 'Games Played';
 
   const th4 = document.createElement('th');
   th4.textContent = 'G';
+  th3.title = 'Goals';
 
   const th5 = document.createElement('th');
   th5.textContent = 'A';
+  th5.title = 'Assists';
 
   const th6 = document.createElement('th');
   th6.textContent = 'PTS';
+  th6.title = 'Points';
 
   const th7 = document.createElement('th');
   th7.textContent = '+/-';
+  th7.title = 'Plus/Minus'
 
   const tBody = document.createElement('tbody')
 

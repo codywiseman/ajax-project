@@ -4,6 +4,17 @@ header {
   align-items: center;
 }
 
+
+.background {
+  background-color: #F6F6F6;
+  min-height: 100vh;
+}
+
+.info {
+  max-width: 650px;
+  margin: auto;
+}
+
 h1 {
   font-family: 'Open Sans', sans-serif;
   color: white;
@@ -27,7 +38,11 @@ h1 {
 
  input[type=search] {
     -webkit-appearance: textfield;
-}​​​
+}
+
+.all-logos {
+  width: 600px;
+}
 
 h3 , .player-info,
 .player-name  {
@@ -86,7 +101,6 @@ tr :nth-child(1) {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 1rem;
 }
 
 .search > div {
@@ -140,6 +154,7 @@ tr :nth-child(1) {
 .btn-fav-div {
   display: flex;
   justify-content: center;
+  margin-top: 2rem;
 }
 
 .btn-dark {
