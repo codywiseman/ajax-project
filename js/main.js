@@ -195,6 +195,14 @@ document.addEventListener('click', (e) => {
   }
 })
 
+// Click on team name on player page to be taken to team page
+
+document.addEventListener('click', (e) => {
+  if (data.view === 'player-page' && e.target.tagName === 'TD') {
+    console.log(e.target)
+  }
+})
+
 // Click on star to favorite player / unfavorite player
 
 $playerPageDiv.addEventListener('click', (e) => {
@@ -582,48 +590,63 @@ function renderPlayerStats(stats) {
 
     const th5 = document.createElement('th');
     th5.textContent = 'G'
+    th5.title = 'Goals'
 
     const th6 = document.createElement('th');
     th6.textContent = 'A'
+    th6.title = 'Assists'
 
     const th7 = document.createElement('th');
     th7.textContent = 'PTS'
+    th7.title = 'Points'
 
     const th8 = document.createElement('th');
     th8.textContent = 'S'
+    th8.title = 'Shots'
 
     const th9 = document.createElement('th');
     th9.textContent = 'S%'
+    th9.title = 'Shot Percentage'
 
     const th10 = document.createElement('th');
     th10.textContent = '+/-'
+    th10.title = 'Plus/Minus'
 
     const th11 = document.createElement('th');
     th11.textContent = 'PIM'
+    th11.title = 'Penalty Minutes'
 
     const th12 = document.createElement('th');
     th12.textContent = 'SHG'
+    th12.title = 'Shorthanded Goals'
 
     const th13 = document.createElement('th');
     th13.textContent = 'PPG'
+    th13.title = 'Power Play Goals'
 
     const th14 = document.createElement('th');
     th14.textContent = 'GWG'
+    th14.title = 'Game Winning Goals'
 
     const th15 = document.createElement('th');
     th15.textContent = 'OTG'
+    th15.title = 'Overtime Goals'
 
     const th16 = document.createElement('th');
     th16.textContent = 'TOI'
+    th16.title = 'Time on Ice'
 
     const th18 = document.createElement('th');
     th18.textContent = 'FO%'
+    th18.title = 'Faceoff Win Percentage'
 
     const th19 = document.createElement('th');
     th19.textContent = 'BLK'
+    th19.title = 'Blocked Shots'
 
     const th20 = document.createElement('th');
     th20.textContent = 'HITS'
+    th20.title = 'Hits'
 
     const tbody = document.createElement('tbody');
 
@@ -649,7 +672,8 @@ function renderPlayerStats(stats) {
       tbrow.setAttribute('class', 'stats-row');
 
       const td1 = document.createElement('td');
-      td1.textContent = stats[i].season;
+      const addHyphen = `${stats[i].season.slice(0, 4)}-${ stats[i].season.slice(4)}`
+      td1.textContent = addHyphen;
 
       const td2 = document.createElement('td');
       td2.textContent = stats[i].team.name;
@@ -770,7 +794,7 @@ function renderFavorites(players) {
 
   const th4 = document.createElement('th');
   th4.textContent = 'G';
-  th3.title = 'Goals';
+  th4.title = 'Goals';
 
   const th5 = document.createElement('th');
   th5.textContent = 'A';
