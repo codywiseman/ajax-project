@@ -73,7 +73,7 @@ teamsXhr.addEventListener('error', () => {
 
   dataview('error-page')
   reload.addEventListener('click', () => {
-    console.log('reload')
+    console.log('reloaded')
   })
 })
 
