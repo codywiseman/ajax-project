@@ -199,7 +199,17 @@ document.addEventListener('click', (e) => {
 
 document.addEventListener('click', (e) => {
   if (data.view === 'player-page' && e.target.tagName === 'TD') {
-    console.log(e.target)
+    let idName = e.target.closest('.team').innerHTML
+    $teamPageDiv.innerHTML = '';
+    renderTeamPage(idName);
+    renderRoster(idName);
+    dataview('team-page');
+    if ($teamPageDiv.innerHTML === '') {
+      const noTeamData = document.createElement('h5')
+      noTeamData.textContent = 'Oops! Sorry, Center Ice only has information for NHL Teams'
+
+      $teamPageDiv.appendChild(noTeamData);
+    }
   }
 })
 
@@ -536,10 +546,12 @@ function renderPlayerStats(stats) {
       tbrow.setAttribute('class', 'stats-row');
 
       const td1 = document.createElement('td');
-      td1.textContent = stats[x].season;
+      const addHyphen = `${stats[x].season.slice(0, 4)}-${stats[x].season.slice(4)}`
+      td1.textContent = addHyphen;
 
       const td2 = document.createElement('td');
       td2.textContent = stats[x].team.name;
+      td2.className = 'team'
 
       const td3 = document.createElement('td');
       if (stats[x].league.name === 'National Hockey League') {
@@ -677,6 +689,7 @@ function renderPlayerStats(stats) {
 
       const td2 = document.createElement('td');
       td2.textContent = stats[i].team.name;
+      td2.className = 'team'
 
       const td3 = document.createElement('td');
       if (stats[i].league.name === 'National Hockey League') {
