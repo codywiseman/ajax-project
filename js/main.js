@@ -12,6 +12,7 @@ const $rosterTable = document.querySelector('.roster-table');
 const $favoritePage = document.querySelector('div[data-view="favorite-page');
 const $btnFav = document.querySelector('.btn-fav');
 const $searchBox = document.getElementById('search-box')
+const $errorPage = document.querySelector('div[data-view="error-page"]');
 let $star = null;
 
 
@@ -63,6 +64,18 @@ teamsXhr.addEventListener('load', () => {
   }
 })
 teamsXhr.send();
+
+teamsXhr.addEventListener('error', () => {
+  const reload = document.createElement('i')
+  reload.className = 'fas fa-redo'
+
+  $errorPage.appendChild(reload)
+
+  dataview('error-page')
+  reload.addEventListener('click', () => {
+    console.log('reload')
+  })
+})
 
 
 //Select team and submit to be take to team page
@@ -286,6 +299,7 @@ function renderTeamPage(team) {
       const teamLogo = document.createElement('img');
       teamLogo.setAttribute('src', teamLogoImages[team])
       teamLogo.setAttribute('class', 'logo')
+      teamLogo.setAttribute('alt', `${team} logo`)
 
       const divTwo = document.createElement('div');
       divTwo.setAttribute('class', 'team-info');
@@ -622,7 +636,7 @@ function renderPlayerStats(stats) {
 
     const th10 = document.createElement('th');
     th10.textContent = '+/-'
-    th10.title = 'Plus/Minus'
+    th10.title = `A player is awarded a "plus" each time he is on the ice when his Club scores a goal. He receives a "minus" if he is on the ice for a goal scored by the opposing Club. The difference in these numbers is considered the player's "plus-minus" statistic.`
 
     const th11 = document.createElement('th');
     th11.textContent = 'PIM'
@@ -819,7 +833,7 @@ function renderFavorites(players) {
 
   const th7 = document.createElement('th');
   th7.textContent = '+/-';
-  th7.title = 'Plus/Minus'
+  th7.title = `A player is awarded a "plus" each time he is on the ice when his Club scores a goal. He receives a "minus" if he is on the ice for a goal scored by the opposing Club. The difference in these numbers is considered the player's "plus-minus" statistic.`
 
   const tBody = document.createElement('tbody')
 
