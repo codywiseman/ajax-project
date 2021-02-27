@@ -65,19 +65,6 @@ teamsXhr.addEventListener('load', () => {
 })
 teamsXhr.send();
 
-teamsXhr.addEventListener('error', () => {
-  const reload = document.createElement('i')
-  reload.className = 'fas fa-redo'
-
-  $errorPage.appendChild(reload)
-
-  dataview('error-page')
-  reload.addEventListener('click', () => {
-    console.log('reloaded')
-  })
-})
-
-
 //Select team and submit to be take to team page
 
 $teamForm.addEventListener('submit', (e) => {

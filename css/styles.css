@@ -64,6 +64,17 @@ tbody tr:nth-child(odd) {
   background-color: #eeeeee;
 }
 
+th {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  background-color: #F6F6F6;
+}
+
+.stats-table-div {
+  height: 500px;
+}
+
 tr {
   text-align: left;
   cursor: pointer;
