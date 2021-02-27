@@ -69,6 +69,7 @@ teamsXhr.send();
 
 $teamForm.addEventListener('submit', (e) => {
   e.preventDefault();
+  dataview('loading')
   if ($teamSelect.selectedIndex !== 0) {
     $teamPageDiv.innerHTML = '';
     renderTeamPage($teamSelectOptions[($teamSelect.selectedIndex - 1)].textContent);
@@ -82,6 +83,7 @@ $teamForm.addEventListener('submit', (e) => {
 
 $playerForm.addEventListener('submit', (e) => {
   e.preventDefault();
+  dataview('loading')
   const playerXhr = new XMLHttpRequest();
   let idName = $playerSearch.value.toLowerCase();
   for (let i = 0; i < playerIds.length; i++) {
@@ -159,6 +161,7 @@ $suggestion.addEventListener('click', (e) => {
 
 document.addEventListener('click', (e) => {
   if (data.view === 'team-page' && e.target.tagName === 'TD') {
+    dataview('loading')
     let idName = e.target.closest('.player-row').innerHTML.toLowerCase();
     const playerXhr = new XMLHttpRequest();
     for (let i = 0; i < playerIds.length; i++) {
@@ -236,6 +239,7 @@ $playerPageDiv.addEventListener('click', (e) => {
 // Click on view tracked players
 
 $btnFav.addEventListener('click', () => {
+  dataview('loading')
   $favoritePage.innerHTML = '';
   renderFavorites(savedPlayer);
   dataview('favorite-page');

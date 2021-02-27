@@ -192,6 +192,14 @@ h5 {
   margin-top: 1rem;
 }
 
+.loading-container {
+  width: 40px;
+  margin: auto;
+}
+
+.loading {
+  width: 100%;
+}
 
 .hidden {
   display: none;
