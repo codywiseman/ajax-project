@@ -13,6 +13,7 @@ const $favoritePage = document.querySelector('div[data-view="favorite-page');
 const $btnFav = document.querySelector('.btn-fav');
 const $searchBox = document.getElementById('search-box')
 const $errorPage = document.querySelector('div[data-view="error-page"]');
+const $refresh = document.querySelector('[name="refresh"]')
 let $star = null;
 
 
@@ -36,6 +37,11 @@ $homeLogo.addEventListener('click', () => {
   dataview('landing-page');
 })
 
+// refresh page on connection error
+
+$refresh.addEventListener('click', () => {
+  dataview('landing-page');
+})
 
 // Request for Teams
 
@@ -64,6 +70,7 @@ teamsXhr.addEventListener('load', () => {
   }
 })
 teamsXhr.send();
+
 
 //Select team and submit to be take to team page
 
@@ -114,6 +121,7 @@ $playerForm.addEventListener('submit', (e) => {
         statsXhr.send();
       })
       i = playerIds.length;
+      console.log(playerXhr)
       playerXhr.send();
     }
     else if (i === (playerIds.length - 1)) {
@@ -163,38 +171,41 @@ document.addEventListener('click', (e) => {
   if (data.view === 'team-page' && e.target.tagName === 'TD') {
     dataview('loading')
     let idName = e.target.closest('.player-row').innerHTML.toLowerCase();
-    const playerXhr = new XMLHttpRequest();
-    for (let i = 0; i < playerIds.length; i++) {
-      if (playerIds[i].hasOwnProperty(idName)) {
-        let id = playerIds[i][idName];
-        playerXhr.open('GET', `https://statsapi.web.nhl.com/api/v1/people/${id.toString()}`);
-        playerXhr.responseType = 'json';
-        playerXhr.addEventListener('load', () => {
-          player = playerXhr.response.people[0];
-          $playerPageDiv.innerHTML = '';
-          renderPlayerPage(player);
-          const statsXhr = new XMLHttpRequest();
-          statsXhr.open('GET', `https://statsapi.web.nhl.com/api/v1/people/${id.toString()}/stats/?stats=yearByYear`);
-          statsXhr.responseType = 'json';
-          statsXhr.addEventListener('load', () => {
-            allStats = statsXhr.response.stats[0].splits;
-            thisSeasonStats = allStats[allStats.length - 1]
-            renderPlayerStats(allStats);
-            $star = document.getElementById('favorite');
-            for (let x = 0; x < savedPlayer.length; x++) {
-              if (savedPlayer[x].player === player.fullName) {
-                $star.className = 'fas fa-star';
+    return new Promise((resolve, reject) => {
+      const playerXhr = new XMLHttpRequest();
+      for (let i = 0; i < playerIds.length; i++) {
+        if (playerIds[i].hasOwnProperty(idName)) {
+          let id = playerIds[i][idName];
+          playerXhr.open('GET', `https://statsapi.web.nhl.com/api/v1/people/${id.toString()}`);
+          playerXhr.responseType = 'json';
+          playerXhr.addEventListener('load', () => {
+            player = playerXhr.response.people[0];
+            $playerPageDiv.innerHTML = '';
+            renderPlayerPage(player);
+            const statsXhr = new XMLHttpRequest();
+            statsXhr.open('GET', `https://statsapi.web.nhl.com/api/v1/people/${id.toString()}/stats/?stats=yearByYear`);
+            statsXhr.responseType = 'json';
+            statsXhr.addEventListener('load', () => {
+              allStats = statsXhr.response.stats[0].splits;
+              thisSeasonStats = allStats[allStats.length - 1]
+              renderPlayerStats(allStats);
+              $star = document.getElementById('favorite');
+              for (let x = 0; x < savedPlayer.length; x++) {
+                if (savedPlayer[x].player === player.fullName) {
+                  $star.className = 'fas fa-star';
+                }
               }
-            }
-            dataview('player-page');
-            scroll(0, 0);
+              dataview('player-page');
+              scroll(0, 0);
+            })
+            statsXhr.send();
           })
-          statsXhr.send();
-        })
-        i = playerIds.length;
+          i = playerIds.length;
+        }
       }
-    }
-    playerXhr.send();
+      playerXhr.onerror = () => reject(dataview('error-page'))
+      playerXhr.send();
+    })
   }
 })
 

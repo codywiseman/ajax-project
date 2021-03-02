@@ -201,6 +201,10 @@ h5 {
   width: 100%;
 }
 
+.fa-redo-alt {
+  color: black;
+}
+
 .hidden {
   display: none;
 }
