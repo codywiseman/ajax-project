@@ -12,6 +12,8 @@ const $rosterTable = document.querySelector('.roster-table');
 const $favoritePage = document.querySelector('div[data-view="favorite-page');
 const $btnFav = document.querySelector('.btn-fav');
 const $searchBox = document.getElementById('search-box')
+const $errorPage = document.querySelector('div[data-view="error-page"]');
+const $refresh = document.querySelector('[name="refresh"]')
 let $star = null;
 
 
@@ -35,6 +37,11 @@ $homeLogo.addEventListener('click', () => {
   dataview('landing-page');
 })
 
+// refresh page on connection error
+
+$refresh.addEventListener('click', () => {
+  dataview('landing-page');
+})
 
 // Request for Teams
 
@@ -69,6 +76,7 @@ teamsXhr.send();
 
 $teamForm.addEventListener('submit', (e) => {
   e.preventDefault();
+  dataview('loading')
   if ($teamSelect.selectedIndex !== 0) {
     $teamPageDiv.innerHTML = '';
     renderTeamPage($teamSelectOptions[($teamSelect.selectedIndex - 1)].textContent);
@@ -82,6 +90,7 @@ $teamForm.addEventListener('submit', (e) => {
 
 $playerForm.addEventListener('submit', (e) => {
   e.preventDefault();
+  dataview('loading')
   const playerXhr = new XMLHttpRequest();
   let idName = $playerSearch.value.toLowerCase();
   for (let i = 0; i < playerIds.length; i++) {
@@ -112,6 +121,7 @@ $playerForm.addEventListener('submit', (e) => {
         statsXhr.send();
       })
       i = playerIds.length;
+      console.log(playerXhr)
       playerXhr.send();
     }
     else if (i === (playerIds.length - 1)) {
@@ -159,39 +169,61 @@ $suggestion.addEventListener('click', (e) => {
 
 document.addEventListener('click', (e) => {
   if (data.view === 'team-page' && e.target.tagName === 'TD') {
+    dataview('loading')
     let idName = e.target.closest('.player-row').innerHTML.toLowerCase();
-    const playerXhr = new XMLHttpRequest();
-    for (let i = 0; i < playerIds.length; i++) {
-      if (playerIds[i].hasOwnProperty(idName)) {
-        let id = playerIds[i][idName];
-        playerXhr.open('GET', `https://statsapi.web.nhl.com/api/v1/people/${id.toString()}`);
-        playerXhr.responseType = 'json';
-        playerXhr.addEventListener('load', () => {
-          player = playerXhr.response.people[0];
-          $playerPageDiv.innerHTML = '';
-          renderPlayerPage(player);
-          const statsXhr = new XMLHttpRequest();
-          statsXhr.open('GET', `https://statsapi.web.nhl.com/api/v1/people/${id.toString()}/stats/?stats=yearByYear`);
-          statsXhr.responseType = 'json';
-          statsXhr.addEventListener('load', () => {
-            allStats = statsXhr.response.stats[0].splits;
-            thisSeasonStats = allStats[allStats.length - 1]
-            renderPlayerStats(allStats);
-            $star = document.getElementById('favorite');
-            for (let x = 0; x < savedPlayer.length; x++) {
-              if (savedPlayer[x].player === player.fullName) {
-                $star.className = 'fas fa-star';
+    return new Promise((resolve, reject) => {
+      const playerXhr = new XMLHttpRequest();
+      for (let i = 0; i < playerIds.length; i++) {
+        if (playerIds[i].hasOwnProperty(idName)) {
+          let id = playerIds[i][idName];
+          playerXhr.open('GET', `https://statsapi.web.nhl.com/api/v1/people/${id.toString()}`);
+          playerXhr.responseType = 'json';
+          playerXhr.addEventListener('load', () => {
+            player = playerXhr.response.people[0];
+            $playerPageDiv.innerHTML = '';
+            renderPlayerPage(player);
+            const statsXhr = new XMLHttpRequest();
+            statsXhr.open('GET', `https://statsapi.web.nhl.com/api/v1/people/${id.toString()}/stats/?stats=yearByYear`);
+            statsXhr.responseType = 'json';
+            statsXhr.addEventListener('load', () => {
+              allStats = statsXhr.response.stats[0].splits;
+              thisSeasonStats = allStats[allStats.length - 1]
+              renderPlayerStats(allStats);
+              $star = document.getElementById('favorite');
+              for (let x = 0; x < savedPlayer.length; x++) {
+                if (savedPlayer[x].player === player.fullName) {
+                  $star.className = 'fas fa-star';
+                }
               }
-            }
-            dataview('player-page');
-            scroll(0, 0);
+              dataview('player-page');
+              scroll(0, 0);
+            })
+            statsXhr.send();
           })
-          statsXhr.send();
-        })
-        i = playerIds.length;
+          i = playerIds.length;
+        }
       }
+      playerXhr.onerror = () => reject(dataview('error-page'))
+      playerXhr.send();
+    })
+  }
+})
+
+// Click on team name on player page to be taken to team page
+
+document.addEventListener('click', (e) => {
+  if (data.view === 'player-page' && e.target.tagName === 'TD') {
+    let idName = e.target.closest('.team').innerHTML
+    $teamPageDiv.innerHTML = '';
+    renderTeamPage(idName);
+    renderRoster(idName);
+    dataview('team-page');
+    if ($teamPageDiv.innerHTML === '') {
+      const noTeamData = document.createElement('h5')
+      noTeamData.textContent = 'Oops! Sorry, Center Ice only has information for NHL Teams'
+
+      $teamPageDiv.appendChild(noTeamData);
     }
-    playerXhr.send();
   }
 })
 
@@ -218,6 +250,7 @@ $playerPageDiv.addEventListener('click', (e) => {
 // Click on view tracked players
 
 $btnFav.addEventListener('click', () => {
+  dataview('loading')
   $favoritePage.innerHTML = '';
   renderFavorites(savedPlayer);
   dataview('favorite-page');
@@ -268,6 +301,7 @@ function renderTeamPage(team) {
       const teamLogo = document.createElement('img');
       teamLogo.setAttribute('src', teamLogoImages[team])
       teamLogo.setAttribute('class', 'logo')
+      teamLogo.setAttribute('alt', `${team} logo`)
 
       const divTwo = document.createElement('div');
       divTwo.setAttribute('class', 'team-info');
@@ -528,10 +562,12 @@ function renderPlayerStats(stats) {
       tbrow.setAttribute('class', 'stats-row');
 
       const td1 = document.createElement('td');
-      td1.textContent = stats[x].season;
+      const addHyphen = `${stats[x].season.slice(0, 4)}-${stats[x].season.slice(4)}`
+      td1.textContent = addHyphen;
 
       const td2 = document.createElement('td');
       td2.textContent = stats[x].team.name;
+      td2.className = 'team'
 
       const td3 = document.createElement('td');
       if (stats[x].league.name === 'National Hockey League') {
@@ -582,48 +618,63 @@ function renderPlayerStats(stats) {
 
     const th5 = document.createElement('th');
     th5.textContent = 'G'
+    th5.title = 'Goals'
 
     const th6 = document.createElement('th');
     th6.textContent = 'A'
+    th6.title = 'Assists'
 
     const th7 = document.createElement('th');
     th7.textContent = 'PTS'
+    th7.title = 'Points'
 
     const th8 = document.createElement('th');
     th8.textContent = 'S'
+    th8.title = 'Shots'
 
     const th9 = document.createElement('th');
     th9.textContent = 'S%'
+    th9.title = 'Shot Percentage'
 
     const th10 = document.createElement('th');
     th10.textContent = '+/-'
+    th10.title = `A player is awarded a "plus" each time he is on the ice when his Club scores a goal. He receives a "minus" if he is on the ice for a goal scored by the opposing Club. The difference in these numbers is considered the player's "plus-minus" statistic.`
 
     const th11 = document.createElement('th');
     th11.textContent = 'PIM'
+    th11.title = 'Penalty Minutes'
 
     const th12 = document.createElement('th');
     th12.textContent = 'SHG'
+    th12.title = 'Shorthanded Goals'
 
     const th13 = document.createElement('th');
     th13.textContent = 'PPG'
+    th13.title = 'Power Play Goals'
 
     const th14 = document.createElement('th');
     th14.textContent = 'GWG'
+    th14.title = 'Game Winning Goals'
 
     const th15 = document.createElement('th');
     th15.textContent = 'OTG'
+    th15.title = 'Overtime Goals'
 
     const th16 = document.createElement('th');
     th16.textContent = 'TOI'
+    th16.title = 'Time on Ice'
 
     const th18 = document.createElement('th');
     th18.textContent = 'FO%'
+    th18.title = 'Faceoff Win Percentage'
 
     const th19 = document.createElement('th');
     th19.textContent = 'BLK'
+    th19.title = 'Blocked Shots'
 
     const th20 = document.createElement('th');
     th20.textContent = 'HITS'
+    th20.title = 'Hits'
 
     const tbody = document.createElement('tbody');
 
@@ -649,10 +700,12 @@ function renderPlayerStats(stats) {
       tbrow.setAttribute('class', 'stats-row');
 
       const td1 = document.createElement('td');
-      td1.textContent = stats[i].season;
+      const addHyphen = `${stats[i].season.slice(0, 4)}-${ stats[i].season.slice(4)}`
+      td1.textContent = addHyphen;
 
       const td2 = document.createElement('td');
       td2.textContent = stats[i].team.name;
+      td2.className = 'team'
 
       const td3 = document.createElement('td');
       if (stats[i].league.name === 'National Hockey League') {
@@ -770,7 +823,7 @@ function renderFavorites(players) {
 
   const th4 = document.createElement('th');
   th4.textContent = 'G';
-  th3.title = 'Goals';
+  th4.title = 'Goals';
 
   const th5 = document.createElement('th');
   th5.textContent = 'A';
@@ -782,7 +835,7 @@ function renderFavorites(players) {
 
   const th7 = document.createElement('th');
   th7.textContent = '+/-';
-  th7.title = 'Plus/Minus'
+  th7.title = `A player is awarded a "plus" each time he is on the ice when his Club scores a goal. He receives a "minus" if he is on the ice for a goal scored by the opposing Club. The difference in these numbers is considered the player's "plus-minus" statistic.`
 
   const tBody = document.createElement('tbody')
 

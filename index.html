@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="BS5/css/bootstrap.css">
   <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@1,600&display=swap" rel="stylesheet">
-  <script src="https://kit.fontawesome.com/7baf961682.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
   <link rel="stylesheet" href="css/reset.css">
   <link rel="stylesheet" href="css/layout.css">
   <link rel="stylesheet" href="css/styles.css">
@@ -52,6 +52,15 @@
             <div class="row justify-content-center">
               <img src="./Images/all-teams.png" alt="team logos" class="all-logos col-8">
             </div>
+          </div>
+        </div>
+        <div class="view hidden" data-view="error-page">
+          <h5 class="mb-0 pb-0">Connection Error</h5>
+          <h5><i class="fas fa-redo-alt" name="refresh"></i></h5>
+        </div>
+        <div class="view hidden" data-view="loading">
+          <div class="loading-container">
+             <img src="./Images/loading.gif" alt="loading" class="loading spinner">
           </div>
         </div>
         <div class="view hidden" data-view="team-page"></div>

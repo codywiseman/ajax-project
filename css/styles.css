@@ -64,6 +64,17 @@ tbody tr:nth-child(odd) {
   background-color: #eeeeee;
 }
 
+th {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  background-color: #F6F6F6;
+}
+
+.stats-table-div {
+  height: 500px;
+}
+
 tr {
   text-align: left;
   cursor: pointer;
@@ -181,6 +192,18 @@ h5 {
   margin-top: 1rem;
 }
 
+.loading-container {
+  width: 40px;
+  margin: auto;
+}
+
+.loading {
+  width: 100%;
+}
+
+.fa-redo-alt {
+  color: black;
+}
 
 .hidden {
   display: none;
