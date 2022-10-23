@@ -2,7 +2,7 @@
 
 Center Ice is a dynamic HTML, CSS, and JavaScript web application that allows users to view information on NHL teams and players
 
-[Live Demo](https://codywiseman.github.io/ajax-project/)
+[Live Demo](https://center-ice-app.onrender.com/)
 
 ## Current Features 
 
